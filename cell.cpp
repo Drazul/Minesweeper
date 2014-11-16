@@ -11,11 +11,6 @@ Cell::initialize(Cell::Type type, Cell::State state) {
   _state = state;
 };
 
-std::vector<Cell> 
-Cell::get_neightbors() {
-  return _neightbors;
-}
-
 bool
 Cell::is_bomb() {
 	return (_type == Cell::Type::Bomb);

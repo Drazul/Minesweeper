@@ -10,7 +10,6 @@ class Cell {
 
   Cell();
   void initialize(Type type, State state);
-  std::vector<Cell> get_neightbors();
   Type get_type();
   State is_visible();
   bool is_bomb();
