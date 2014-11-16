@@ -2,7 +2,6 @@
 #include <iostream>
 #include <algorithm>
 
-
 #include <bandit/bandit.h>
 
 #include "game.h"
@@ -27,6 +26,11 @@ go_bandit([] () {
                   .EqualTo(Difficulty::Hard));
     });
 
+    it("has a number of bombs depending on difficulty level", [&]() {
+      Assert::That(minesweeper.get_number_of_bombs(),
+                  Is().EqualTo((minesweeper.get_difficulty()/10)+1));
+    });
+    
     it("has a number of cells depending on difficulty level", [&](){
       Assert::That(minesweeper.get_board().size(),
                   Is().EqualTo(3*3).Or()
@@ -70,7 +74,15 @@ go_bandit([] () {
                       Is().EqualTo(Cell::State::Visible).Or()
                       .EqualTo(Cell::State::NotVisible));
         });
+      });
 
+      it("can check the number of cells that have bomb type", [&]() {
+        int counter=0;
+        for(Cell cell : board)
+          if (cell.get_type() == Cell::Type::Bomb) counter++;
+
+        Assert::That(counter, 
+                      Is().EqualTo(minesweeper.get_number_of_bombs()));
       });
     });
   });
