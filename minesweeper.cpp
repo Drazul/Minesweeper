@@ -8,7 +8,7 @@ Minesweeper::Minesweeper() {}
 void
 Minesweeper::set_difficulty(Difficulty level) {
   _level = level;
-  _board = std::vector<Cell>(_level*_level);
+  _board = std::vector<Cell>(_level * _level);
   _number_of_bombs = _level;
 }
 

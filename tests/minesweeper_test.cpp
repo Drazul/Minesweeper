@@ -5,7 +5,7 @@
 #include <bandit/bandit.h>
 
 #include "minesweeper.h"
-
+#include <stdlib.h>
 
 using namespace bandit;
 
@@ -115,6 +115,25 @@ go_bandit([] () {
                     Is().EqualTo(after));
       });
 
+      it("execute a cell wicht state is Empty execute all neighbors cells", [&]() {
+        int x, y, index;
+        do{
+          x = rand() % minesweeper.get_difficulty();
+          y = rand() % minesweeper.get_difficulty();
+
+          index = (x * minesweeper.get_difficulty()) + y;
+        } while (board[index].is_bomb());
+        Cell cell = board[index];
+        cell.execute();
+
+        int counter=0;
+
+        for(Cell cell : board)
+          if (cell.is_visible()) counter++;
+
+        Assert::That(counter,
+                    Is().GreaterThan(1));
+      });
     });
   });
 });
