@@ -5,7 +5,7 @@
 
 class Cell {
  public:
-  enum Type{Bomb, Near, Empty};
+  enum Type{Bomb=-1, Empty=0, Near=1};
   enum State{Visible, NotVisible};
 
 
@@ -15,7 +15,7 @@ class Cell {
   Type get_type();
   State is_visible();
   bool is_bomb();
-
+  void chage_type_near_to_bomb();
  private:
   Type _type;
   std::vector<Cell> _neightbors;

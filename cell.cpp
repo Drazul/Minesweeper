@@ -30,3 +30,9 @@ Cell::State
 Cell::is_visible() {
   return _state;
 }
+
+void
+Cell::chage_type_near_to_bomb() {
+	if (_type != Type::Bomb)
+		_type = static_cast<Type> (_type + 1);
+}
