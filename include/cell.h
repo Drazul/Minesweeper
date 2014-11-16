@@ -14,6 +14,7 @@ class Cell {
   std::vector<Cell> get_neightbors();
   Type get_type();
   State is_visible();
+  bool is_bomb();
 
  private:
   Type _type;

@@ -1,5 +1,5 @@
 HEADERDIR=include tests
-OBJECTFILES=game.o cell.o
+OBJECTFILES=minesweeper.o cell.o
 
 CXX=g++ -std=c++11
 CXXFLAGS = -ggdb $(foreach directory, $(HEADERDIR), -I$(directory))

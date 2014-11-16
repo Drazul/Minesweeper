@@ -7,13 +7,18 @@ Cell::Cell(){
 
 void
 Cell::initialize(Cell::Type type, Cell::State state) {
-  _type = Cell::Type::Empty;
-  _state = Cell::State::NotVisible;
+  _type = type;
+  _state = state;
 };
 
 std::vector<Cell> 
 Cell::get_neightbors() {
   return _neightbors;
+}
+
+bool
+Cell::is_bomb() {
+	return (_type == Cell::Type::Bomb);
 }
 
 Cell::Type
