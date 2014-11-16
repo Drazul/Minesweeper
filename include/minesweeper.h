@@ -1,16 +1,21 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef MINESWEEPER_H
+#define MINESWEEPER_H
 
 #include "cell.h"
 
-
 #include <vector>
 
-enum Difficulty {VeryEasy=9, Easy=64, Medium=256, Hard=480};
+enum Difficulty {VeryEasy=3, Easy=8, Medium=16, Hard=32};
 class Minesweeper {
   std::vector<Cell> _board;
+  std::vector<std::pair<int, int>> _mines;
+
   Difficulty _level;
   int _number_of_bombs;
+
+  void initialize_empty();
+  void initialize_bombs();
+  void initialize_near();
 
  public:
   Minesweeper();
@@ -27,5 +32,8 @@ class Minesweeper {
 
   std::vector<Cell>
   get_board();
+
+  void
+  initialize();
 };
 #endif

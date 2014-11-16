@@ -4,7 +4,7 @@
 
 #include <bandit/bandit.h>
 
-#include "game.h"
+#include "minesweeper.h"
 
 
 using namespace bandit;
@@ -28,15 +28,18 @@ go_bandit([] () {
 
     it("has a number of bombs depending on difficulty level", [&]() {
       Assert::That(minesweeper.get_number_of_bombs(),
-                  Is().EqualTo((minesweeper.get_difficulty()/10)+1));
+                  Is().EqualTo(Difficulty::VeryEasy).Or()
+                  .EqualTo(Difficulty::Easy).Or()
+                  .EqualTo(Difficulty::Medium).Or()
+                  .EqualTo(Difficulty::Hard));    
     });
     
     it("has a number of cells depending on difficulty level", [&](){
       Assert::That(minesweeper.get_board().size(),
-                  Is().EqualTo(3*3).Or()
-                  .EqualTo(8*8).Or()
-                  .EqualTo(16*16).Or()
-                  .EqualTo(30*16));
+                  Is().EqualTo(Difficulty::VeryEasy * Difficulty::VeryEasy).Or()
+                  .EqualTo(Difficulty::Easy * Difficulty::Easy).Or()
+                  .EqualTo(Difficulty::Medium * Difficulty::Medium).Or()
+                  .EqualTo(Difficulty::Hard * Difficulty::Hard));
     });
 
 
@@ -44,12 +47,8 @@ go_bandit([] () {
       std::vector<Cell> board;
 
       before_each([&]() {
+        minesweeper.initialize();
         board = minesweeper.get_board();
-
-        for(Cell cell: board){
-          cell.initialize(Cell::Type::Empty, Cell::State::Visible);
-        }
-
       });
 
       it("can check cell types", [&]() {
@@ -57,17 +56,27 @@ go_bandit([] () {
           Assert::That(cell.get_type(),
                       Is().EqualTo(Cell::Type::Bomb).Or()
                       .EqualTo(Cell::Type::Near).Or()
+                      .GreaterThan(Cell::Type::Near).Or()
                       .EqualTo(Cell::Type::Empty));
         });
       });
-/*
-      it("know their neightbors", [&]() {
-        std::for_each(board.begin(), board.end(), [](Cell& cell) {
-          Assert::That(cell.get_neightbors().size(),
-                      Is().Not().EqualTo(0));
-        });
+
+      it("can be different types", [&]() {
+        int counterBombs=0, counterEmpty=0, counterNear=0;
+
+        for(Cell cell : board){
+          if (cell.get_type() == Cell::Type::Bomb) counterBombs++;
+          if (cell.get_type() == Cell::Type::Empty) counterEmpty++;
+          if (cell.get_type() == Cell::Type::Near) counterNear++;
+        }
+
+        Assert::That(0, 
+                    Is().LessThan(counterBombs).And()
+                    .LessThan(counterEmpty).And()
+                    .LessThan(counterNear));
+
       });
-*/
+
       it("can check the visibility of cells", [&]() {
         std::for_each(board.begin(), board.end(), [](Cell& cell) {
           Assert::That(cell.is_visible(),
@@ -78,12 +87,34 @@ go_bandit([] () {
 
       it("can check the number of cells that have bomb type", [&]() {
         int counter=0;
+
         for(Cell cell : board)
           if (cell.get_type() == Cell::Type::Bomb) counter++;
 
         Assert::That(counter, 
                       Is().EqualTo(minesweeper.get_number_of_bombs()));
       });
+
+      it("can chek if a cell have flag", [&]() {
+        std::for_each(board.begin(), board.end(), [](Cell& cell) {
+          Assert::That(cell.is_flagged(),
+                      Is().EqualTo(true).Or()
+                      .EqualTo(false));
+        });
+      });
+
+      it("cannot execute a flagged cell", [&]() {
+        bool before, after;
+        Cell cell;
+        before = cell.is_visible();
+        cell.put_flag();
+        cell.execute();
+        after = cell.is_visible();
+
+        Assert::That(before,
+                    Is().EqualTo(after));
+      });
+
     });
   });
 });
