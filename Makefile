@@ -15,6 +15,8 @@ minesweeper: $(OBJECTFILES)
 main: clean $(OBJECTFILES)
 		$(CXX)  $(CXXFLAGS) $(OBJECTFILES) main.cpp -o main
 		
-
+gdb:
+	gdb minesweeper_test
+	
 clean:
 	$(RM) *# *~ *.o minesweeper_test tests/*.o

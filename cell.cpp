@@ -38,14 +38,14 @@ Cell::get_type() {
   return _type;
 }
 
-Cell::State
+bool
 Cell::is_visible() {
-  return _state;
+  return (_state == Cell::State::Visible);
 }
 
 void
 Cell::execute() {
-	if(_flag != Flag::Flagged && _state != State::Visible)
+	if(_flag != Flag::Flagged && _state == State::NotVisible)
 		_state = State::Visible;
 }
 

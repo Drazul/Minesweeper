@@ -123,8 +123,8 @@ go_bandit([] () {
 
           index = (x * minesweeper.get_difficulty()) + y;
         } while (board[index].is_bomb());
-        Cell cell = board[index];
-        cell.execute();
+        
+        board[index].execute();
 
         int counter=0;
 

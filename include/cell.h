@@ -12,7 +12,7 @@ class Cell {
   Cell();
   void initialize(Type type, State state);
   Type get_type();
-  State is_visible();
+  bool is_visible();
   bool is_bomb();
   void chage_type_near_to_bomb();
   void put_flag();
