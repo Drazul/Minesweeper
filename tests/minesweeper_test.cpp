@@ -122,9 +122,10 @@ go_bandit([] () {
           y = rand() % minesweeper.get_difficulty();
 
           index = (x * minesweeper.get_difficulty()) + y;
-        } while (board[index].is_bomb());
+        } while (board[index].is_bomb() || board[index].get_type() == Cell::Type::Near);
         
-        board[index].execute();
+        minesweeper.execute(x, y);
+        board = minesweeper.get_board();
 
         int counter=0;
 

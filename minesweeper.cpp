@@ -1,6 +1,7 @@
 #include "minesweeper.h"
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
+#include <queue>
 
 Minesweeper::Minesweeper() {}
 //Minesweeper::Minesweeper(Difficulty level): _level(level) {}; 
@@ -74,4 +75,34 @@ Minesweeper::initialize_near() {
       }
     }
   }
+}
+
+void 
+Minesweeper::execute(int x, int y) {
+  int index;
+  std::queue<std::pair<int, int>> queue;
+  std::pair<int, int> coord;
+
+  queue.push(std::make_pair(x, y));
+
+  _board[index].execute();
+  while(!queue.empty()){
+    coord = queue.back();
+    queue.pop();
+
+    index = (coord.first * _level) + coord.second;
+    if(_board[index].get_type() == Cell::Type::Empty){
+      for (int i = x - 1; i <= x + 1; i++){
+        for(int j = y - 1; j <= y + 1; j++){
+          index = (i * _level) + j;
+          if(!_board[index].is_visible()){
+            _board[index].execute();
+            queue.push(std::make_pair(i, j));
+          }
+        }
+      }
+    }
+
+  }
+
 }

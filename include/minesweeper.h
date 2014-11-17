@@ -35,5 +35,9 @@ class Minesweeper {
 
   void
   initialize();
+
+  void 
+  execute(int x, int y);
+
 };
 #endif
