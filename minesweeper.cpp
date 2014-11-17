@@ -103,8 +103,8 @@ Minesweeper::execute(int x, int y) {
       }
     }else{
       if(_board[index].is_bomb()){
-        for(std::pair<int, int> coor : _mines){
-          index = (coord.first * _level) + coord.second;
+        for(std::pair<int, int> mine: _mines){
+          index = (mine.first * _level) + mine.second;
           _board[index].execute();
         }
       }
