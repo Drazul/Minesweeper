@@ -77,7 +77,7 @@ Minesweeper::initialize_near() {
   }
 }
 
-void 
+std::vector<Cell> 
 Minesweeper::execute(int x, int y) {
   int index;
   std::queue<std::pair<int, int>> queue;
@@ -101,8 +101,15 @@ Minesweeper::execute(int x, int y) {
           }
         }
       }
+    }else{
+      if(_board[index].is_bomb()){
+        for(std::pair<int, int> coor : _mines){
+          index = (coord.first * _level) + coord.second;
+          _board[index].execute();
+        }
+      }
     }
-
   }
 
+  return _board;
 }
