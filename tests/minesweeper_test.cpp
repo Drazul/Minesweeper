@@ -122,7 +122,7 @@ go_bandit([] () {
           y = rand() % minesweeper.get_difficulty();
 
           index = (x * minesweeper.get_difficulty()) + y;
-        } while (board[index].is_bomb() || board[index].get_type() == Cell::Type::Near);
+        } while (board[index].get_type() != Cell::Type::Empty);
         
         minesweeper.execute(x, y);
         board = minesweeper.get_board();
@@ -134,6 +134,27 @@ go_bandit([] () {
 
         Assert::That(counter,
                     Is().GreaterThan(1));
+      });
+
+      it("execute a cell wicht state is Near only execute this cell", [&]() {
+        int x, y, index;
+        do{
+          x = rand() % minesweeper.get_difficulty();
+          y = rand() % minesweeper.get_difficulty();
+
+          index = (x * minesweeper.get_difficulty()) + y;
+        } while (board[index].get_type() != Cell::Type::Near);
+        
+        minesweeper.execute(x, y);
+        board = minesweeper.get_board();
+
+        int counter=0;
+
+        for(Cell cell : board)
+          if (cell.is_visible()) counter++;
+
+        Assert::That(counter,
+                    Is().EqualTo(1));
       });
     });
   });
