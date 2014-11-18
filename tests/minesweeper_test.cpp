@@ -189,6 +189,8 @@ go_bandit([] () {
         Assert::That(counter,
                     Is().EqualTo(minesweeper.get_number_of_bombs()));
       });
+
+      
     });
   });
 });

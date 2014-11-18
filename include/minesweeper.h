@@ -6,11 +6,14 @@
 #include <vector>
 
 enum Difficulty {VeryEasy=3, Easy=8, Medium=16, Hard=32};
+enum GameState {Continue=0, GameOver=-1};
+
 class Minesweeper {
   std::vector<Cell> _board;
   std::vector<int> _mines;
 
   Difficulty _level;
+  GameState _game_state;
   int _number_of_bombs;
 
   void initialize_empty();
@@ -41,5 +44,12 @@ class Minesweeper {
 
   void
   execute_all_bombs();
+
+  std::vector<char>
+  get_visible_board();
+
+  GameState
+  get_game_state();
+
 };
 #endif
