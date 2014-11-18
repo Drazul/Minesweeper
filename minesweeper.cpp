@@ -67,19 +67,26 @@ Minesweeper::initialize_bombs() {
 
 void
 Minesweeper::initialize_near() {
-  int index, x, y;
+  int index;
   for(int mine: _mines){
-    x = mine / _level;
-    y = mine % _level;
-    for (int i = x - 1; i < x + 1; i++){
-      for (int j = y -1; j < y + 1; j++){
-        if (i >= 0 && i < _level && j >= 0 && j < _level){
-          index = (i * _level) + j; 
-          if (!_board[index].is_bomb())
-            _board[index].chage_type_near_to_bomb();
-        }
-      }
-    }
+    index = mine - 1;
+    if(index > 0 && index % _level != (_level - 1) && !_board[index].is_bomb()) _board[index].change_to_type_near();
+    index = mine - _level;
+    if(index > 0 && index % _level != (_level - 1) && !_board[index].is_bomb()) _board[index].change_to_type_near();
+    index = mine - _level - 1;
+    if(index > 0 && !_board[index].is_bomb()) _board[index].change_to_type_near();
+    index = mine - _level + 1;
+    if(index > 0 && index % _level != 0 && !_board[index].is_bomb()) _board[index].change_to_type_near();
+
+    index = mine + 1;
+    if(index < _board.size() && index % _level != 0 && !_board[index].is_bomb()) _board[index].change_to_type_near();
+    index = mine + _level;
+    if(index < _board.size() && !_board[index].is_bomb()) _board[index].change_to_type_near();
+    index = mine + _level - 1;
+    if(index < _board.size() && index % _level != (_level - 1) && !_board[index].is_bomb()) _board[index].change_to_type_near();
+    index = mine + _level + 1;
+    if(index < _board.size() && index % _level != 0 && !_board[index].is_bomb()) _board[index].change_to_type_near();
+   
   }
 }
 
@@ -91,7 +98,6 @@ Minesweeper::execute(int x, int y) {
 
   queue.push(std::make_pair(x, y));
   _board[(x * _level) + y].execute();
-  std::cout << "Execute " << x << " " << y << std::endl;
 
   while(!queue.empty()){
     coord = queue.back();
@@ -102,12 +108,9 @@ Minesweeper::execute(int x, int y) {
     if(_board[index].get_type() == Cell::Type::Empty){
       for (int i = coord.first - 1; i <= coord.first + 1; i++){
         for(int j = coord.second - 1; j <= coord.second + 1; j++){
-          std::cout << "punto " << i << " " << j << std::endl;
           if(i >= 0 && j >= 0 && i < _level && j < _level){
             index = (i * _level) + j;
             if(!_board[index].is_visible()){
-               std::cout << "Execute " << i << " " << j << std::endl;
-               std::cout << "Before execute " << _board[index].get_type() << std::endl;
               _board[index].execute();
               queue.push(std::make_pair(i, j));
             }
@@ -147,6 +150,7 @@ Minesweeper::get_visible_board() {
     }else if(_board[i].is_flagged()) visible_board[i] = 'F';
   }
   */
+  
   for (int i=0; i< _board.size(); i++){
     switch(_board[i].get_type()){
       case Cell::Type::Empty:

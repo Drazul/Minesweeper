@@ -14,7 +14,7 @@ class Cell {
   Type get_type();
   bool is_visible();
   bool is_bomb();
-  void chage_type_near_to_bomb();
+  void change_to_type_near();
   void put_flag();
   void remove_flag();
   void execute();

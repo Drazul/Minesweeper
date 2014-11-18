@@ -50,7 +50,7 @@ Cell::execute() {
 }
 
 void
-Cell::chage_type_near_to_bomb() {
+Cell::change_to_type_near() {
 	_type = Type::Near;
 	/*
 	if (_type != Type::Bomb)
