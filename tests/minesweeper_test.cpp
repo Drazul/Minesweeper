@@ -119,15 +119,14 @@ go_bandit([] () {
         minesweeper.execute_all_bombs();
         board = minesweeper.get_board();
 
-        int counterBombs = 0, counterVisible = 0;
+        int counterBombs = 0;
 
         for(Cell cell : board){
           if (cell.get_type() == Cell::Type::Bomb) counterBombs++;
-          if (cell.is_visible()) counterVisible++;
         }
 
         Assert::That(counterBombs, 
-                      Is().EqualTo(counterVisible));
+                      Is().EqualTo(minesweeper.get_number_of_bombs()));
       });
 
       it("execute a cell wicht state is Empty execute all neighbors cells", [&]() {

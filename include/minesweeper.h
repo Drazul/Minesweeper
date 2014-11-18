@@ -8,7 +8,7 @@
 enum Difficulty {VeryEasy=3, Easy=8, Medium=16, Hard=32};
 class Minesweeper {
   std::vector<Cell> _board;
-  std::vector<std::pair<int, int>> _mines;
+  std::vector<int> _mines;
 
   Difficulty _level;
   int _number_of_bombs;

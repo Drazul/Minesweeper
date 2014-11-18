@@ -10,6 +10,7 @@ void
 Minesweeper::set_difficulty(Difficulty level) {
   _level = level;
   _board = std::vector<Cell>(_level * _level);
+  _mines = std::vector<int>(_level);
   _number_of_bombs = _level;
 }
 
@@ -26,7 +27,7 @@ Minesweeper::get_difficulty() {
 
 int 
 Minesweeper::get_number_of_bombs() {
-	return _number_of_bombs;
+	return static_cast<int>(_number_of_bombs);
 }
 
 void
@@ -49,13 +50,14 @@ Minesweeper::initialize_bombs() {
   int counter_bombs = 0;
   int x, y, index;
 
-  while(counter_bombs <= get_number_of_bombs()){
+  while(counter_bombs < get_number_of_bombs()){
     x = rand() % _level;
     y = rand() % _level;
 
     index = (x * _level) + y;
     if(!_board[index].is_bomb()){
-      _mines.push_back(std::make_pair(x, y));
+      _mines[counter_bombs] = index;
+
       _board[index].initialize(Cell::Type::Bomb, Cell::State::NotVisible);
       counter_bombs++;
     }
@@ -64,13 +66,16 @@ Minesweeper::initialize_bombs() {
 
 void
 Minesweeper::initialize_near() {
-  int index;
-  for(std::pair<int, int> mine: _mines){
-    for (int i = mine.first - 1; i < (mine.first + 1); i++){
-      for (int j = mine.second -1; j < (mine.second + 1); j++){
+  int index, x, y;
+  for(int mine: _mines){
+    x = mine / _level;
+    y = mine % _level;
+    for (int i = x - 1; i < x + 1; i++){
+      for (int j = y -1; j < y + 1; j++){
         if (i > 0 && i < _level && j > 0 && j < _level){
           index = (i * _level) + j; 
-          _board[index].chage_type_near_to_bomb();
+          if (!_board[index].is_bomb())
+            _board[index].chage_type_near_to_bomb();
         }
       }
     }
@@ -108,15 +113,13 @@ Minesweeper::execute(int x, int y) {
       }
     }
   }
-
   return _board;
 }
 
 void
 Minesweeper::execute_all_bombs() {
-  int index;
-  for(std::pair<int, int> mine: _mines){
-    index = (mine.first * _level) + mine.second;
-    _board[index].execute();
-  }
+  int index = _mines.size();
+  for(int mine: _mines)
+    _board[mine].execute();
+  
 }
