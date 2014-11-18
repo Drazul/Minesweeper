@@ -39,5 +39,7 @@ class Minesweeper {
   std::vector<Cell> 
   execute(int x, int y);
 
+  void
+  execute_all_bombs();
 };
 #endif

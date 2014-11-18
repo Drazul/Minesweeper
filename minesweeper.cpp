@@ -85,12 +85,13 @@ Minesweeper::execute(int x, int y) {
 
   queue.push(std::make_pair(x, y));
 
-  _board[index].execute();
   while(!queue.empty()){
     coord = queue.back();
     queue.pop();
 
     index = (coord.first * _level) + coord.second;
+    _board[index].execute();
+
     if(_board[index].get_type() == Cell::Type::Empty){
       for (int i = x - 1; i <= x + 1; i++){
         for(int j = y - 1; j <= y + 1; j++){
@@ -103,13 +104,19 @@ Minesweeper::execute(int x, int y) {
       }
     }else{
       if(_board[index].is_bomb()){
-        for(std::pair<int, int> mine: _mines){
-          index = (mine.first * _level) + mine.second;
-          _board[index].execute();
-        }
+        execute_all_bombs();
       }
     }
   }
 
   return _board;
+}
+
+void
+Minesweeper::execute_all_bombs() {
+  int index;
+  for(std::pair<int, int> mine: _mines){
+    index = (mine.first * _level) + mine.second;
+    _board[index].execute();
+  }
 }
