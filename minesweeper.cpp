@@ -146,7 +146,7 @@ Minesweeper::get_visible_board() {
   int num_visibles = 0;
 
   for (int i=0; i< _board.size(); i++){
-    if(_board[i].is_visible()){
+    if(!_board[i].is_visible()){
       num_visibles++;
 
       switch(_board[i].get_type()){
@@ -154,10 +154,14 @@ Minesweeper::get_visible_board() {
           visible_board[i] = ' ';
           break;
         case Cell::Type::Near:
-          visible_board[i] = 'N';
+          char aux;
+          aux = (char) _board[i].get_number_near_bombs();
+          visible_board[i] =  aux;
+          std::cout << _board[i].get_number_near_bombs();
           break;
         case Cell::Type::Bomb:
           visible_board[i] = 'B';
+          break;
       }
     }else {
       if(_board[i].is_flagged())

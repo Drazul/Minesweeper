@@ -19,12 +19,14 @@ class Cell {
   void remove_flag();
   void execute();
   bool is_flagged();
+  int  get_number_near_bombs();
 
  private:
   Type _type;
   std::vector<Cell> _neightbors;
   State _state;
   Flag _flag;
+  int _near_bombs;
 };
 
 #endif

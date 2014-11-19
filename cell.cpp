@@ -4,6 +4,7 @@ Cell::Cell(){
   _type = Cell::Type::Empty;
   _state = Cell::State::NotVisible;
   _flag = Flag::NotFlagged;
+  _near_bombs = 48; /* This is the number 0 in ascii */
 }
 
 void
@@ -11,6 +12,7 @@ Cell::initialize(Cell::Type type, Cell::State state) {
   _type = type;
   _state = state;
   _flag = Flag::NotFlagged;
+  _near_bombs = 0;
 };
 
 void 
@@ -52,8 +54,10 @@ Cell::execute() {
 void
 Cell::change_to_type_near() {
 	_type = Type::Near;
-	/*
-	if (_type != Type::Bomb)
-		_type = static_cast<Type> (_type + 1);
-		*/
+	_near_bombs++;
+}
+
+int 
+Cell::get_number_near_bombs() {
+	return _near_bombs;
 }
