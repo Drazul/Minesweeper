@@ -4,8 +4,9 @@ OBJECTFILES=minesweeper.o cell.o
 CXX=g++ -std=c++11
 CXXFLAGS = -ggdb $(foreach directory, $(HEADERDIR), -I$(directory))
 
-all: clean minesweeper exec
-
+#all: clean minesweeper exec
+all: clean main execmain
+	
 exec:
 	./minesweeper_test
 
@@ -15,6 +16,9 @@ minesweeper: $(OBJECTFILES)
 main: clean $(OBJECTFILES)
 		$(CXX)  $(CXXFLAGS) $(OBJECTFILES) main.cpp -o main
 		
+execmain:
+	./main
+
 gdb:
 	gdb minesweeper_test
 	

@@ -66,27 +66,23 @@ Minesweeper::initialize_bombs() {
 }
 
 void
+Minesweeper::initialize_near_index(int index, int pos) {
+  if( index >= 0 && index < _board.size() && !_board[index].is_bomb() && abs((index %_level) - pos) <= 1)
+    _board[index].change_to_type_near();
+}
+
+void
 Minesweeper::initialize_near() {
   int index;
   for(int mine: _mines){
-    index = mine - 1;
-    if(index > 0 && index % _level != (_level - 1) && !_board[index].is_bomb()) _board[index].change_to_type_near();
-    index = mine - _level;
-    if(index > 0 && index % _level != (_level - 1) && !_board[index].is_bomb()) _board[index].change_to_type_near();
-    index = mine - _level - 1;
-    if(index > 0 && !_board[index].is_bomb()) _board[index].change_to_type_near();
-    index = mine - _level + 1;
-    if(index > 0 && index % _level != 0 && !_board[index].is_bomb()) _board[index].change_to_type_near();
-
-    index = mine + 1;
-    if(index < _board.size() && index % _level != 0 && !_board[index].is_bomb()) _board[index].change_to_type_near();
-    index = mine + _level;
-    if(index < _board.size() && !_board[index].is_bomb()) _board[index].change_to_type_near();
-    index = mine + _level - 1;
-    if(index < _board.size() && index % _level != (_level - 1) && !_board[index].is_bomb()) _board[index].change_to_type_near();
-    index = mine + _level + 1;
-    if(index < _board.size() && index % _level != 0 && !_board[index].is_bomb()) _board[index].change_to_type_near();
-   
+    initialize_near_index(mine - 1,          mine % _level);
+    initialize_near_index(mine - 1 - _level, mine % _level);
+    initialize_near_index(mine - 1 + _level, mine % _level);
+    initialize_near_index(mine + 1,          mine % _level);
+    initialize_near_index(mine + 1 -_level,  mine % _level);
+    initialize_near_index(mine + 1 + _level, mine % _level);
+    initialize_near_index(mine - _level,     mine % _level);
+    initialize_near_index(mine + _level,     mine % _level);
   }
 }
 
@@ -154,7 +150,7 @@ Minesweeper::get_visible_board() {
   for (int i=0; i< _board.size(); i++){
     switch(_board[i].get_type()){
       case Cell::Type::Empty:
-        visible_board[i] = ' ';
+        visible_board[i] = '*';
         break;
       case Cell::Type::Near:
         visible_board[i] = 'N';

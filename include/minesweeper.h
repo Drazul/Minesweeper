@@ -19,7 +19,7 @@ class Minesweeper {
   void initialize_empty();
   void initialize_bombs();
   void initialize_near();
-
+  void initialize_near_index(int index, int pos);
  public:
   Minesweeper();
   //Minesweeper(Difficulty level);
