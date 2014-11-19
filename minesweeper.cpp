@@ -80,46 +80,51 @@ Minesweeper::initialize_near() {
     initialize_near_index(mine - 1 - _level, mine % _level);
     initialize_near_index(mine - 1 + _level, mine % _level);
     initialize_near_index(mine + 1,          mine % _level);
-    initialize_near_index(mine + 1 -_level,  mine % _level);
+    initialize_near_index(mine + 1 - _level, mine % _level);
     initialize_near_index(mine + 1 + _level, mine % _level);
-    initialize_near_index(mine - _level,     mine % _level);
-    initialize_near_index(mine + _level,     mine % _level);
+    initialize_near_index(mine -     _level, mine % _level);
+    initialize_near_index(mine +     _level, mine % _level);
   }
 }
 
 std::vector<Cell> 
 Minesweeper::execute(int x, int y) {
   int index;
-  std::queue<std::pair<int, int>> queue;
-  std::pair<int, int> coord;
+  index = (x * _level) + y;
+  std::queue<int> queue;
 
-  queue.push(std::make_pair(y, x));
-  _board[(y * _level) + x].execute();
+  _board[index].execute();
+
+  queue.push(index);
 
   while(!queue.empty()){
-    coord = queue.back();
+    index = queue.front();
     queue.pop();
 
-    index = (coord.first * _level) + coord.second;
+    switch(_board[index].get_type()){
 
-    if(_board[index].get_type() == Cell::Type::Empty){
-      for (int i = coord.first - 1; i <= coord.first + 1; i++){
-        for(int j = coord.second - 1; j <= coord.second + 1; j++){
-          if(i >= 0 && j >= 0 && i < _level && j < _level){
-            index = (i * _level) + j;
-            if(!_board[index].is_visible()){
-              _board[index].execute();
-              queue.push(std::make_pair(i, j));
+      case Cell::Type::Empty:
+        x = index / _level;
+        y = index % _level;
+        for (int i = x - 1; i <= x + 1; i++){
+          for(int j = y - 1; j <= y + 1; j++){
+            if(i >= 0 && j >= 0 && i < _level && j < _level){
+              index = (i * _level) + j;
+              if(!_board[index].is_visible() && !_board[index].is_flagged()){
+                _board[index].execute();
+                queue.push(index);
+              }
             }
           }
         }
-      }
-    }else{
-      if(_board[index].is_bomb()){
+        break;
+
+      case Cell::Type::Bomb:
         execute_all_bombs();
         _game_state = GameState::GameOver;
-      }
-      else
+        break;
+
+      case Cell::Type::Near:
         _board[index].execute();
     }
   }
