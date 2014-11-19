@@ -6,7 +6,7 @@
 #include <vector>
 
 enum Difficulty {VeryEasy=3, Easy=8, Medium=16, Hard=32};
-enum GameState {Continue=0, GameOver=-1};
+enum GameState {Continue=0, GameOver=-1, Winner=1};
 
 class Minesweeper {
   std::vector<Cell> _board;

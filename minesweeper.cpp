@@ -143,9 +143,12 @@ std::vector<char>
 Minesweeper::get_visible_board() {
   std::vector<char> visible_board = std::vector<char>(_level * _level);
   visible_board.assign(_level*_level,'*');
+  int num_visibles = 0;
 
   for (int i=0; i< _board.size(); i++){
-    if(!_board[i].is_visible()){
+    if(_board[i].is_visible()){
+      num_visibles++;
+
       switch(_board[i].get_type()){
         case Cell::Type::Empty:
           visible_board[i] = ' ';
@@ -164,20 +167,9 @@ Minesweeper::get_visible_board() {
     }
   }
 
-/*
-  for (int i=0; i< _board.size(); i++){
-    switch(_board[i].get_type()){
-      case Cell::Type::Empty:
-        visible_board[i] = '*';
-        break;
-      case Cell::Type::Near:
-        visible_board[i] = 'N';
-        break;
-      case Cell::Type::Bomb:
-        visible_board[i] = 'B';
-    }
-  }
-*/
+  if(num_visibles == (_board.size() - _number_of_bombs) && _game_state == GameState::Continue)
+    _game_state = GameState::Winner;
+
   return visible_board;
 }
 
