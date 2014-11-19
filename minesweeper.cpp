@@ -67,7 +67,8 @@ Minesweeper::initialize_bombs() {
 
 void
 Minesweeper::initialize_near_index(int index, int pos) {
-  if( index >= 0 && index < _board.size() && !_board[index].is_bomb() && abs((index %_level) - pos) <= 1)
+  if( index >= 0 && index < _board.size() && !_board[index].is_bomb() 
+                                  && abs((index % _level) - pos) <= 1)
     _board[index].change_to_type_near();
 }
 
@@ -92,8 +93,8 @@ Minesweeper::execute(int x, int y) {
   std::queue<std::pair<int, int>> queue;
   std::pair<int, int> coord;
 
-  queue.push(std::make_pair(x, y));
-  _board[(x * _level) + y].execute();
+  queue.push(std::make_pair(y, x));
+  _board[(y * _level) + x].execute();
 
   while(!queue.empty()){
     coord = queue.back();
@@ -116,7 +117,10 @@ Minesweeper::execute(int x, int y) {
     }else{
       if(_board[index].is_bomb()){
         execute_all_bombs();
+        _game_state = GameState::GameOver;
       }
+      else
+        _board[index].execute();
     }
   }
   return _board;
@@ -134,19 +138,28 @@ std::vector<char>
 Minesweeper::get_visible_board() {
   std::vector<char> visible_board = std::vector<char>(_level * _level);
   visible_board.assign(_level*_level,'*');
-/*
-  for(int i = 0; i < _board.size(); i++){
-    if(_board[i].is_visible()){
-      if(_board[i].is_bomb()){
-        visible_board[i] = 'B';
-        _game_state = GameState::GameOver;
+
+  for (int i=0; i< _board.size(); i++){
+    if(!_board[i].is_visible()){
+      switch(_board[i].get_type()){
+        case Cell::Type::Empty:
+          visible_board[i] = ' ';
+          break;
+        case Cell::Type::Near:
+          visible_board[i] = 'N';
+          break;
+        case Cell::Type::Bomb:
+          visible_board[i] = 'B';
       }
-      if(_board[i].get_type() == Cell::Type::Empty) visible_board[i] = ' ';
-      if(_board[i].get_type() == Cell::Type::Near) visible_board[i] = '1';
-    }else if(_board[i].is_flagged()) visible_board[i] = 'F';
+    }else {
+      if(_board[i].is_flagged())
+        visible_board[i] = 'F';
+      else
+        visible_board[i] = '*';
+    }
   }
-  */
-  
+
+/*
   for (int i=0; i< _board.size(); i++){
     switch(_board[i].get_type()){
       case Cell::Type::Empty:
@@ -159,7 +172,7 @@ Minesweeper::get_visible_board() {
         visible_board[i] = 'B';
     }
   }
-
+*/
   return visible_board;
 }
 
