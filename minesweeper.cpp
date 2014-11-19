@@ -146,9 +146,8 @@ Minesweeper::get_visible_board() {
   int num_visibles = 0;
 
   for (int i=0; i< _board.size(); i++){
-    if(!_board[i].is_visible()){
+    if(_board[i].is_visible()){
       num_visibles++;
-
       switch(_board[i].get_type()){
         case Cell::Type::Empty:
           visible_board[i] = ' ';
