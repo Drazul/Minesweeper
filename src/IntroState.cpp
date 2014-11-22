@@ -168,10 +168,10 @@ IntroState::start() {
   createScene();
 
   Ogre::SceneNode *node = _sceneManager->getSceneNode("SinbadNode");
-  
+  /*
   _framelistener = new MyFrameListener(window, cam, node);
   _root->addFrameListener(_framelistener);
-  
+  */
   _root->startRendering();
 
   changeState(PlayState::getSingletonPtr());
