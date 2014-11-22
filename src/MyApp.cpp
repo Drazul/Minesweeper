@@ -41,8 +41,10 @@ int MyApp::start() {
   _sceneManager = _root->createSceneManager(ST_INTERIOR);
   
   Camera* cam = _sceneManager->createCamera("MainCamera");
-  cam->setPosition(Vector3(5.98, 2.73, 7.09));
-  cam->lookAt(Vector3(-3.45,1.45,2.69));
+  //cam->setPosition(Vector3(5.98, 2.73, 7.09));
+  //cam->lookAt(Vector3(-3.45,1.45,2.69));
+  cam->setPosition(Vector3(7.19941, 13.4578, -10.0267));
+  cam->setDirection(Vector3(-0.00103734, -0.62784, 0.778358));
   cam->setNearClipDistance(0.1);
   cam->setFarClipDistance(100);
   

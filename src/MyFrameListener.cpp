@@ -103,6 +103,9 @@ bool MyFrameListener::frameStarted(const FrameEvent& evt) {
     float roty = _mouse->getMouseState().Y.rel * deltaT * -1;
     _camera->yaw(Radian(rotx));
     _camera->pitch(Radian(roty));
+    std::cout << "camara position: " << _camera->getPosition() << std::endl;
+    std::cout << "camara direction: " << _camera->getRealDirection() << std::endl;
+
     cout << "Boton Medio" << endl;
   }
   
@@ -127,36 +130,29 @@ bool MyFrameListener::frameStarted(const FrameEvent& evt) {
     it = result.begin();
 
     if (it != result.end()) {
+      //Aqui se en la casilla que pincho, puede ejecutarla directamente
+      std::cout << "nombre de la entidad en la que pincho " << it->movable->getParentSceneNode()->getName() << std::endl;
+      std::string str = it->movable->getParentSceneNode()->getName();
+      std::string str3 = str.substr (4);
+      std::cout << str3 << std::endl;
+      int index = std::stoi(str3);
+      std::cout << index << std::endl;
+
+
+
+
+
       if (mbleft) {
-    //Aqui se en la casilla que pincho, puede ejecutarla directamente
-    std::cout << "nombre de la entidad en la que pincho " << it->movable->getParentSceneNode()->getName() << std::endl;
-    std::string str = it->movable->getParentSceneNode()->getName();
-    std::string str3 = str.substr (4);
-    std::cout << str3 << std::endl;
-    int index = std::stoi(str3);
-    std::cout << index << std::endl;
-
-    _minesweeper.execute(index/10, index % 10);
-    std::cout << "se ha ejecutado" << std::endl;
-
-    actualizeBoard();
-
-/*
-	if (it->movable->getParentSceneNode()->getName() == "RayQueryNode") {
-	  SceneNode *nodeaux = _sceneManager->createSceneNode();
-	  int i = rand()%2;   std::stringstream saux;
-	  saux << "Cube" << i+1 << ".mesh";
-    //saux << "Cell" << ".mesh";
-	  Entity *entaux = _sceneManager->createEntity(saux.str());
-	  entaux->setQueryFlags(i?CUBE1:CUBE2);
-	  nodeaux->attachObject(entaux);
-	  nodeaux->translate(r.getPoint(it->distance));
-	  _sceneManager->getRootSceneNode()->addChild(nodeaux);
-	}
-  */
+        _minesweeper.execute(index/10, index % 10);
+        std::cout << "se ha ejecutado" << std::endl;
       }
-      _selectedNode = it->movable->getParentSceneNode();
-      _selectedNode->showBoundingBox(true);
+      else if (mbright){
+        _minesweeper.put_flag(index/10, index % 10);
+        std::cout << "se ha puesto bandera" << std::endl;
+      }
+      actualizeBoard();
+      //_selectedNode = it->movable->getParentSceneNode();
+      //_selectedNode->showBoundingBox(true);
     }
   }
   
@@ -177,7 +173,7 @@ MyFrameListener::actualizeBoard() {
   std::vector<char> visibleBoard = _minesweeper.get_visible_board();
   std::stringstream materialName;
 
-  for(int i = size-1; i > 0; i--) {
+  for(int i = size-1; i >= 0; i--) {
     switch(visibleBoard[i]){
       case 'B':
         _entityNodes[i]->setMaterialName("bomba");
