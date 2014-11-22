@@ -14,6 +14,8 @@ IntroState::enter ()
   _viewport->setBackgroundColour(Ogre::ColourValue(1.0, 1.0, 1.0));
 
   _exitGame = false;
+
+  changeState(PlayState::getSingletonPtr());
 }
 
 void
