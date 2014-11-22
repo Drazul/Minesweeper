@@ -15,8 +15,13 @@
 #include "MyFrameListener.h"
 
 MyFrameListener::MyFrameListener(RenderWindow* win, Camera* cam, 
-				 OverlayManager *om,SceneManager *sm){
+				 OverlayManager *om,SceneManager *sm, Minesweeper minesweeper,
+         std::vector<Ogre::Entity*> entityNodes){
+
   OIS::ParamList param; size_t windowHandle;  ostringstream wHandleStr;
+
+  _entityNodes = entityNodes;
+  _minesweeper = minesweeper;
 
   _camera = cam;  _overlayManager = om;
   _sceneManager = sm; _win = win;
@@ -123,6 +128,20 @@ bool MyFrameListener::frameStarted(const FrameEvent& evt) {
 
     if (it != result.end()) {
       if (mbleft) {
+    //Aqui se en la casilla que pincho, puede ejecutarla directamente
+    std::cout << "nombre de la entidad en la que pincho " << it->movable->getParentSceneNode()->getName() << std::endl;
+    std::string str = it->movable->getParentSceneNode()->getName();
+    std::string str3 = str.substr (4);
+    std::cout << str3 << std::endl;
+    int index = std::stoi(str3);
+    std::cout << index << std::endl;
+
+    _minesweeper.execute(index);
+    std::cout << "se ha ejecutado" << std::endl;
+
+    actualizeBoard();
+
+/*
 	if (it->movable->getParentSceneNode()->getName() == "RayQueryNode") {
 	  SceneNode *nodeaux = _sceneManager->createSceneNode();
 	  int i = rand()%2;   std::stringstream saux;
@@ -134,6 +153,7 @@ bool MyFrameListener::frameStarted(const FrameEvent& evt) {
 	  nodeaux->translate(r.getPoint(it->distance));
 	  _sceneManager->getRootSceneNode()->addChild(nodeaux);
 	}
+  */
       }
       _selectedNode = it->movable->getParentSceneNode();
       _selectedNode->showBoundingBox(true);
@@ -146,4 +166,33 @@ bool MyFrameListener::frameStarted(const FrameEvent& evt) {
   oe->setLeft(posx);  oe->setTop(posy);
 
   return true;
+}
+
+void
+MyFrameListener::actualizeBoard() {
+  //Se debe sustitutir esto por el nivel correspondiente
+  int size = _entityNodes.size();
+    std::cout << size << std::endl;
+
+  std::vector<char> visibleBoard = _minesweeper.get_visible_board();
+  std::stringstream materialName;
+
+  for(int i = 0; i < size; i++) {
+    switch(visibleBoard[i]){
+      case 'B':
+        _entityNodes[i]->setMaterialName("bomba");
+        break;
+      case '*':
+        _entityNodes[i]->setMaterialName("hierba");
+        break;
+      case ' ':
+        _entityNodes[i]->setVisible(false);
+        break;
+      default:
+        materialName.str(""); materialName.str(""); // Limpiamos el stream
+        materialName << "numero" << visibleBoard[i];
+        _entityNodes[i]->setMaterialName(materialName.str());
+        break;
+    }
+  }
 }

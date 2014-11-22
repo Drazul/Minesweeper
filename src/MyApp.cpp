@@ -26,7 +26,8 @@ MyApp::~MyApp() {
 }
 
 int MyApp::start() {
-  _minesweeper.set_difficulty(Difficulty::Easy);
+  _level = Difficulty::Easy;
+  _minesweeper.set_difficulty(_level);
   _minesweeper.initialize();
 
   _root = new Root();
@@ -55,7 +56,7 @@ int MyApp::start() {
   createScene();
   createOverlay();
 
-  _framelistener = new MyFrameListener(window, cam, _overlayManager, _sceneManager);
+  _framelistener = new MyFrameListener(window, cam, _overlayManager, _sceneManager, _minesweeper, _entityNodes);
   _root->addFrameListener(_framelistener);
   
   _root->startRendering();
@@ -84,13 +85,12 @@ void MyApp::loadResources() {
 void MyApp::createScene() {
 
   createGroundScene();
-  createPlane4RayQuery();
+  //createPlane4RayQuery();
   createBoardScene();
 }
 
 void MyApp::createBoardScene() {
   //Se debe sustitutir esto por el nivel correspondiente
-  int level = 8, index =0;
   Ogre::Entity * entity;
   Ogre::SceneNode * sceneNode = _sceneManager->createSceneNode("BoardSceneNode");
   Ogre::SceneNode * sceneNodeCells;
@@ -98,32 +98,13 @@ void MyApp::createBoardScene() {
 
   std::vector<char> visibleBoard = _minesweeper.get_visible_board();
 
-  for(int i = 0; i < level; i++) {
-    for(int j = 0; j < level; j++) {
-      index = (i * 8) + j;
-      sceneNodeName << "Cell" << i << j << "SceneNode";
+  for(int i = 0; i < _level; i++) {
+    for(int j = 0; j < _level; j++) {
+      sceneNodeName << "Cell" << i << j << "";
 
       sceneNodeCells = _sceneManager->createSceneNode(sceneNodeName.str());
       entity = _sceneManager->createEntity("Cell.mesh");
-
-      switch(visibleBoard[index]){
-        case 'B':
-          entity->setMaterialName("bomba");
-          break;
-        case '*':
-          entity->setMaterialName("hierba");
-          break;
-        case ' ':
-          entity->setVisible(false);
-          break;
-        default:
-          sceneNodeName.str(""); sceneNodeName.str(""); // Limpiamos el stream
-          sceneNodeName << "numero" << visibleBoard[index];
-          entity->setMaterialName(sceneNodeName.str());
-          break;
-
-      }
-
+      entity->setMaterialName("hierba");
 
       sceneNodeCells->attachObject(entity);
       //Multiplico por 2 porque ese es el tamaño de cada celda, el 0.1 restante es para separarlas un poquito
@@ -131,6 +112,8 @@ void MyApp::createBoardScene() {
       sceneNode->addChild(sceneNodeCells);
 
       sceneNodeName.str(""); sceneNodeName.str(""); // Limpiamos el stream
+
+      _entityNodes.push_back(entity);
     }
   }
   _sceneManager->getRootSceneNode()->addChild(sceneNode);

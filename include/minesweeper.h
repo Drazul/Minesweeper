@@ -39,6 +39,9 @@ class Minesweeper {
   void
   initialize();
 
+  std::vector<char>
+  execute(int index);
+  
   std::vector<char> 
   execute(int x, int y);
 

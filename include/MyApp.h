@@ -9,9 +9,10 @@ private:
   Root* _root;
   MyFrameListener* _framelistener;
   OverlayManager* _overlayManager;
-  std::vector<Ogre::SceneNode> _sceneNodes;
+  std::vector<Ogre::Entity*> _entityNodes;
 
   Minesweeper _minesweeper;
+  Difficulty _level;
 public:
   MyApp();
   ~MyApp();  
