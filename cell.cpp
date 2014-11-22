@@ -17,7 +17,8 @@ Cell::initialize(Cell::Type type, Cell::State state) {
 
 void 
 Cell::put_flag() {
-	_flag = Flag::Flagged;
+  if(_state == Cell::State::NotVisible)
+    _flag = Flag::Flagged;
 }
 
 void

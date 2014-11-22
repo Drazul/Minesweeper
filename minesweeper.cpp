@@ -12,7 +12,7 @@ Minesweeper::set_difficulty(Difficulty level) {
   _board = std::vector<Cell>(_level * _level);
   _mines = std::vector<int>(_level);
   _number_of_bombs = _level;
-  _game_state = GameState::Continue;
+  _game_state = BoardState::Continue;
 }
 
 
@@ -121,7 +121,7 @@ Minesweeper::execute(int x, int y) {
 
       case Cell::Type::Bomb:
         execute_all_bombs();
-        _game_state = GameState::GameOver;
+        _game_state = BoardState::GameOver;
         break;
 
       case Cell::Type::Near:
@@ -156,7 +156,6 @@ Minesweeper::get_visible_board() {
           char aux;
           aux = (char) _board[i].get_number_near_bombs();
           visible_board[i] =  aux;
-          std::cout << _board[i].get_number_near_bombs();
           break;
         case Cell::Type::Bomb:
           visible_board[i] = 'B';
@@ -170,13 +169,18 @@ Minesweeper::get_visible_board() {
     }
   }
 
-  if(num_visibles == (_board.size() - _number_of_bombs) && _game_state == GameState::Continue)
-    _game_state = GameState::Winner;
+  if(num_visibles == (_board.size() - _number_of_bombs) && _game_state == BoardState::Continue)
+    _game_state = BoardState::Winner;
 
   return visible_board;
 }
 
-GameState
-Minesweeper::get_game_state() {
+BoardState
+Minesweeper::get_board_state() {
   return _game_state;
+}
+
+std::vector<Cell> 
+put_flag(int x, int y) {
+  
 }
