@@ -26,6 +26,9 @@ MyApp::~MyApp() {
 }
 
 int MyApp::start() {
+  _minesweeper.set_difficulty(Difficulty::Easy);
+  _minesweeper.initialize();
+
   _root = new Root();
   
   if(!_root->restoreConfig()) {
@@ -93,12 +96,35 @@ void MyApp::createBoardScene() {
   Ogre::SceneNode * sceneNodeCells;
   std::stringstream sceneNodeName;
 
+  std::vector<char> visibleBoard = _minesweeper.get_visible_board();
+
   for(int i = 0; i < level; i++) {
     for(int j = 0; j < level; j++) {
+      index = (i * 8) + j;
       sceneNodeName << "Cell" << i << j << "SceneNode";
 
       sceneNodeCells = _sceneManager->createSceneNode(sceneNodeName.str());
       entity = _sceneManager->createEntity("Cell.mesh");
+
+      switch(visibleBoard[index]){
+        case 'B':
+          entity->setMaterialName("bomba");
+          break;
+        case '*':
+          entity->setMaterialName("hierba");
+          break;
+        case ' ':
+          entity->setVisible(false);
+          break;
+        default:
+          sceneNodeName.str(""); sceneNodeName.str(""); // Limpiamos el stream
+          sceneNodeName << "numero" << visibleBoard[index];
+          entity->setMaterialName(sceneNodeName.str());
+          break;
+
+      }
+
+
       sceneNodeCells->attachObject(entity);
       //Multiplico por 2 porque ese es el tamaño de cada celda, el 0.1 restante es para separarlas un poquito
       sceneNodeCells->setPosition(2.1 * i, 0, 2.1 * j);
@@ -111,7 +137,7 @@ void MyApp::createBoardScene() {
 }
 
 void MyApp::createPlane4RayQuery() {
-  //Creo el plano del suelo
+  //Creo el plano con el que interaccionara el rayQuery
   Ogre::Plane plane4RayQuery(Ogre::Vector3::UNIT_Y, 0);
   Ogre::MeshManager::getSingleton().createPlane("plane4RayQuery",
   Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane4RayQuery,

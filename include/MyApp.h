@@ -1,5 +1,6 @@
 #include <Ogre.h>
 #include "MyFrameListener.h"
+#include "minesweeper.h"
 
 class MyApp {
   
@@ -9,6 +10,8 @@ private:
   MyFrameListener* _framelistener;
   OverlayManager* _overlayManager;
   std::vector<Ogre::SceneNode> _sceneNodes;
+
+  Minesweeper _minesweeper;
 public:
   MyApp();
   ~MyApp();  
