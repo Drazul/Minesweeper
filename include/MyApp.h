@@ -8,7 +8,7 @@ private:
   Root* _root;
   MyFrameListener* _framelistener;
   OverlayManager* _overlayManager;
-  
+  std::vector<Ogre::SceneNode> _sceneNodes;
 public:
   MyApp();
   ~MyApp();  
@@ -16,5 +16,6 @@ public:
   void loadResources();
   void createScene();
   void createOverlay();
-  void createGroundPlane();
+  void createGroundScene();
+  void createBoardScene();
 };

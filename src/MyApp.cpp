@@ -32,7 +32,7 @@ int MyApp::start() {
     _root->showConfigDialog();
     _root->saveConfig();
   }
-  
+
   RenderWindow* window = _root->initialise(true,"MyApp Example");
   _sceneManager = _root->createSceneManager(ST_INTERIOR);
   
@@ -80,11 +80,33 @@ void MyApp::loadResources() {
 
 void MyApp::createScene() {
 
-  createGroundPlane();
-
+  createGroundScene();
+  createBoardScene();
 }
 
-void MyApp::createGroundPlane() {
+void MyApp::createBoardScene() {
+  //Se debe sustitutir esto por el nivel correspondiente
+  int level = 8, index =0;
+  Ogre::Entity * entity;
+  Ogre::SceneNode * sceneNode = _sceneManager->createSceneNode("BoardSceneNode");
+  Ogre::SceneNode * sceneNodeCells;
+  std::stringstream sceneNodeName;
+
+  for(int i = 0; i < level; i++) {
+    for(int j = 0; j < level; j++) {
+      sceneNodeName << "Cell" << i << j << "SceneNode";
+
+      sceneNodeCells = _sceneManager->createSceneNode(sceneNodeName.str());
+      entity = _sceneManager->createEntity("Cell.mesh");
+      sceneNodeCells->attachObject(entity);
+      sceneNodeCells->setPosition(2.1 * i, 0, 2.1 * j);
+      sceneNode->addChild(sceneNodeCells);
+    }
+  }
+  _sceneManager->getRootSceneNode()->addChild(sceneNode);
+}
+
+void MyApp::createGroundScene() {
   //Creo el plano del suelo
   Ogre::Plane planeGround(Ogre::Vector3::UNIT_Y, 0);
   Ogre::MeshManager::getSingleton().createPlane("planeGround",
