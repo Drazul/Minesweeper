@@ -81,6 +81,7 @@ void MyApp::loadResources() {
 void MyApp::createScene() {
 
   createGroundScene();
+  createPlane4RayQuery();
   createBoardScene();
 }
 
@@ -99,11 +100,33 @@ void MyApp::createBoardScene() {
       sceneNodeCells = _sceneManager->createSceneNode(sceneNodeName.str());
       entity = _sceneManager->createEntity("Cell.mesh");
       sceneNodeCells->attachObject(entity);
+      //Multiplico por 2 porque ese es el tamaño de cada celda, el 0.1 restante es para separarlas un poquito
       sceneNodeCells->setPosition(2.1 * i, 0, 2.1 * j);
       sceneNode->addChild(sceneNodeCells);
+
+      sceneNodeName.str(""); sceneNodeName.str(""); // Limpiamos el stream
     }
   }
   _sceneManager->getRootSceneNode()->addChild(sceneNode);
+}
+
+void MyApp::createPlane4RayQuery() {
+  //Creo el plano del suelo
+  Ogre::Plane plane4RayQuery(Ogre::Vector3::UNIT_Y, 0);
+  Ogre::MeshManager::getSingleton().createPlane("plane4RayQuery",
+  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane4RayQuery,
+  200,200,1,1,true,1,20,20,Ogre::Vector3::UNIT_Z);
+
+  //Creo el nodo de escena y la entidad que van a contener al plano
+  Ogre::SceneNode* rayQueryNode = _sceneManager->createSceneNode("RayQueryNode");
+  Ogre::Entity* rayQueryEnt = _sceneManager->createEntity("RayQueryNode", "plane4RayQuery");
+  rayQueryNode->attachObject(rayQueryEnt);
+  rayQueryNode->setVisible(false);
+
+  rayQueryNode->setPosition(0, 0.05, 0); //Posiciono el plano justo encima de las casillas
+
+  //Adjunto al nodo de escena principal el nodo de escena creado
+  _sceneManager->getRootSceneNode()->addChild(rayQueryNode);
 }
 
 void MyApp::createGroundScene() {

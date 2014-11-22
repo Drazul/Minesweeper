@@ -18,4 +18,6 @@ public:
   void createOverlay();
   void createGroundScene();
   void createBoardScene();
+  void createPlane4RayQuery();
+
 };

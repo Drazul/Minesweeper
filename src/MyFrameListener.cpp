@@ -123,7 +123,7 @@ bool MyFrameListener::frameStarted(const FrameEvent& evt) {
 
     if (it != result.end()) {
       if (mbleft) {
-	if (it->movable->getParentSceneNode()->getName() == "Ground") {
+	if (it->movable->getParentSceneNode()->getName() == "RayQueryNode") {
 	  SceneNode *nodeaux = _sceneManager->createSceneNode();
 	  int i = rand()%2;   std::stringstream saux;
 	  saux << "Cube" << i+1 << ".mesh";
