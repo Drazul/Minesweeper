@@ -39,7 +39,7 @@ class Minesweeper {
   void
   initialize();
 
-  std::vector<Cell> 
+  std::vector<char> 
   execute(int x, int y);
 
   std::vector<char> 

@@ -86,10 +86,13 @@ Minesweeper::initialize_near() {
   }
 }
 
-std::vector<Cell> 
+std::vector<char> 
 Minesweeper::execute(int x, int y) {
   int index;
   index = (x * _level) + y;
+  if(_board[index].is_flagged()) {
+    return get_visible_board();
+  }
   std::queue<int> queue;
 
   _board[index].execute();
@@ -127,7 +130,7 @@ Minesweeper::execute(int x, int y) {
         _board[index].execute();
     }
   }
-  return _board;
+  return get_visible_board();
 }
 
 void

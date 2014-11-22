@@ -24,7 +24,7 @@ int main() {
 	game.initialize();
 
 	std::vector<char> board;
-	int x, y;
+	int x, y, t;
 
 	do{
 
@@ -43,6 +43,9 @@ int main() {
 			break;
 		}
 
+		std::cout << "Elige accion Flag (1) o Execute (0)" << std::endl;
+		std::cin >> t;
+
 		std::cout << "Introduce coordenada horizontal" << std::endl;
 		std::cin >> x;
 		std::cout << "Introduce coordenada vertical" << std::endl;
@@ -50,7 +53,9 @@ int main() {
 
 		//x = -1;
 		if (x == -1 || y == -1) break;
-		game.execute(x, y);
+
+		if (t == 1) game.put_flag(x, y);
+		else				game.execute(x, y);
 
 	}while (1);
 	return 0;
