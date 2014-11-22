@@ -184,6 +184,8 @@ MyFrameListener::actualizeBoard() {
       case ' ':
         _entityNodes[i]->setVisible(false);
         break;
+      case 'F':
+        break;
       default:
         materialName.str(""); materialName.str(""); // Limpiamos el stream
         materialName << "numero" << visibleBoard[i];
