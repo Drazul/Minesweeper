@@ -42,7 +42,7 @@ class Minesweeper {
   std::vector<Cell> 
   execute(int x, int y);
 
-  std::vector<Cell> 
+  std::vector<char> 
   put_flag(int x, int y);
 
   void

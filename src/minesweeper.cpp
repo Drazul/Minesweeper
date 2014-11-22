@@ -67,14 +67,13 @@ Minesweeper::initialize_bombs() {
 
 void
 Minesweeper::initialize_near_index(int index, int pos) {
-  if( index >= 0 && index < _board.size() && !_board[index].is_bomb() 
+  if( index >= 0 && index < (int) _board.size() && !_board[index].is_bomb() 
                                   && abs((index % _level) - pos) <= 1)
     _board[index].change_to_type_near();
 }
 
 void
 Minesweeper::initialize_near() {
-  int index;
   for(int mine: _mines){
     initialize_near_index(mine - 1,          mine % _level);
     initialize_near_index(mine - 1 - _level, mine % _level);
@@ -133,7 +132,6 @@ Minesweeper::execute(int x, int y) {
 
 void
 Minesweeper::execute_all_bombs() {
-  int index = _mines.size();
   for(int mine: _mines)
     _board[mine].execute();
   
@@ -145,7 +143,7 @@ Minesweeper::get_visible_board() {
   visible_board.assign(_level*_level,'*');
   int num_visibles = 0;
 
-  for (int i=0; i< _board.size(); i++){
+  for (int i=0; i< (int) _board.size(); i++){
     if(_board[i].is_visible()){
       num_visibles++;
       switch(_board[i].get_type()){
@@ -169,7 +167,7 @@ Minesweeper::get_visible_board() {
     }
   }
 
-  if(num_visibles == (_board.size() - _number_of_bombs) && _game_state == BoardState::Continue)
+  if(num_visibles == ((int) _board.size() - _number_of_bombs) && _game_state == BoardState::Continue)
     _game_state = BoardState::Winner;
 
   return visible_board;
@@ -180,7 +178,10 @@ Minesweeper::get_board_state() {
   return _game_state;
 }
 
-std::vector<Cell> 
-put_flag(int x, int y) {
-  
+std::vector<char> 
+Minesweeper::put_flag(int x, int y) {
+  int index = (x * _level) + y;
+  _board[index].put_flag();
+
+  return get_visible_board();
 }

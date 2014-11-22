@@ -29,7 +29,7 @@ OBJS := $(subst $(DIRSRC), $(DIROBJ), \
 
 .PHONY: all clean
 
-all: info dirs $(EXEC)
+all: clean dirs $(EXEC)
 
 info:
 	@echo '------------------------------------------------------'
