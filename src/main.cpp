@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 
+
 void print(std::vector<char> v, int level) {
 	std::cout << std::endl << "    0 1 2 3 4 5 6 7 8 9" << std::endl << std::endl;
 	for(int i=0;i<level;i++){
