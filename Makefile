@@ -28,7 +28,7 @@ OBJS := $(subst $(DIRSRC), $(DIROBJ), \
 
 .PHONY: all clean
 
-all: clean dirs $(EXEC) exe
+all: dirs $(EXEC) exe
 
 exe:
 	./$(EXEC)
