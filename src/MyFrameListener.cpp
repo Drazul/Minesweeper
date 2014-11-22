@@ -136,7 +136,7 @@ bool MyFrameListener::frameStarted(const FrameEvent& evt) {
     int index = std::stoi(str3);
     std::cout << index << std::endl;
 
-    _minesweeper.execute(index);
+    _minesweeper.execute(index/10, index % 10);
     std::cout << "se ha ejecutado" << std::endl;
 
     actualizeBoard();
@@ -177,7 +177,7 @@ MyFrameListener::actualizeBoard() {
   std::vector<char> visibleBoard = _minesweeper.get_visible_board();
   std::stringstream materialName;
 
-  for(int i = 0; i < size; i++) {
+  for(int i = size-1; i > 0; i--) {
     switch(visibleBoard[i]){
       case 'B':
         _entityNodes[i]->setMaterialName("bomba");
