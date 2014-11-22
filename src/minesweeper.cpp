@@ -185,7 +185,10 @@ Minesweeper::get_board_state() {
 std::vector<char> 
 Minesweeper::put_flag(int x, int y) {
   int index = (x * _level) + y;
-  _board[index].put_flag();
+  if(_board[index].is_flagged())
+    _board[index].remove_flag();
+  else
+    _board[index].put_flag();
 
   return get_visible_board();
 }
