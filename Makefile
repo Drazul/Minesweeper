@@ -4,12 +4,11 @@ EXEC := main
 DIRSRC := src/
 DIROBJ := obj/
 DIRHEA := include/
-DIRTEST := tests/
 
 CXX := g++ -std=c++11
 
 # Flags de compilación -----------------------------------------------
-CXXFLAGS := `pkg-config --cflags OGRE` -I$(DIRHEA) -I$(DIRTEST) -Wall 
+CXXFLAGS := `pkg-config --cflags OGRE` -I$(DIRHEA) -Wall 
 
 # Flags del linker ---------------------------------------------------
 LDFLAGS := `pkg-config --libs-only-L OGRE`
