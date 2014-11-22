@@ -25,7 +25,7 @@
 #include <OIS/OIS.h>
 
 #include "GameState.h"
-
+#include "MyFrameListener.h"
 class IntroState : public Ogre::Singleton<IntroState>, public GameState
 {
  public:
@@ -50,11 +50,17 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   static IntroState& getSingleton ();
   static IntroState* getSingletonPtr ();
 
+  void createScene();
+  void start();
+  void loadResources();
+
  protected:
   Ogre::Root* _root;
-  Ogre::SceneManager* _sceneMgr;
+  Ogre::SceneManager* _sceneManager;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
+
+  MyFrameListener * _framelistener;
 
   bool _exitGame;
 };
