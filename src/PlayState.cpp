@@ -1,4 +1,4 @@
-#include "PlayState.h"
+#include "IntroState.h"
 #include "PlayState.h"
 
 template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
@@ -11,10 +11,14 @@ PlayState::enter ()
   _minesweeper.set_difficulty(_level);
   _minesweeper.initialize();  
 
-  _root = Ogre::Root::getSingletonPtr();
+  if(_root == nullptr)
+    _root = Ogre::Root::getSingletonPtr();
+  
+  if(_sceneManager == nullptr)
+    _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "PlaySceneManager");
 
-  _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "PlaySceneManager");
-  _camera = _sceneManager->createCamera("MainCamera");
+  if(_camera == nullptr)
+    _camera = _sceneManager->createCamera("MainCamera");
 
   _camera->setPosition(Ogre::Vector3(7.19941, 13.4578, -10.0267));
   _camera->setDirection(Ogre::Vector3(-0.00103734, -0.62784, 0.778358));
@@ -29,7 +33,6 @@ PlayState::enter ()
 
 
   _win = _root->getAutoCreatedWindow();
-
   _raySceneQuery = _sceneManager->createRayQuery(Ogre::Ray());
 
   _root->startRendering();
@@ -123,6 +126,7 @@ PlayState::actualizeBoard() {
   std::stringstream materialName;
 
   for(int i = size-1; i >= 0; i--) {
+    _entityNodes[i]->setVisible(true);
     switch(visibleBoard[i]){
       case 'B':
         _entityNodes[i]->setMaterialName("bomba");
@@ -185,10 +189,20 @@ PlayState::keyPressed
 (const OIS::KeyEvent &e)
 {
   // Transición al siguiente estado.
-  // Espacio --> PlayState
-  if (e.key == OIS::KC_SPACE) {
-    changeState(PlayState::getSingletonPtr());
+  // Espacio --> IntroState
+  //Al poner esa transicion ya no coge el escape
+  //if (e.key == OIS::KC_SPACE) {
+  //  changeState(IntroState::getSingletonPtr());
+  //}
+  if (e.key == OIS::KC_ESCAPE) {
+    _exitGame = true;
   }
+  if (e.key == OIS::KC_A) {
+    std::cout << "Tecla A" << std::endl;
+    _minesweeper.initialize();
+    actualizeBoard();
+  }
+   
 }
 
 void

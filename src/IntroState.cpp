@@ -6,11 +6,14 @@ template<> IntroState* Ogre::Singleton<IntroState>::msSingleton = 0;
 void
 IntroState::enter ()
 {
-  _root = Ogre::Root::getSingletonPtr();
+  if(_root == nullptr)
+    _root = Ogre::Root::getSingletonPtr();
 
-  _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "IntroSceneManager");
+  if(_sceneManager == nullptr)
+    _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "IntroSceneManager");
 
-  _camera = _sceneManager->createCamera("MenuCamera");
+  if(_camera == nullptr)
+    _camera = _sceneManager->createCamera("MenuCamera");
   //_viewport->setBackgroundColour(Ogre::ColourValue(1.0, 1.0, 1.0));
 
   _camera->setPosition(Ogre::Vector3(0.5, 4, 12));
@@ -21,7 +24,11 @@ IntroState::enter ()
 
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 
+  createOverlay();
   createMenu();
+
+  _win = _root->getAutoCreatedWindow();
+  //_raySceneQuery = _sceneManager->createRayQuery(Ogre::Ray());
 
   _root->startRendering();
 
@@ -67,6 +74,21 @@ void IntroState::createMenu() {
 //camara direction: Vector3(0, 0, -1)
 }
 
+Ogre::Ray IntroState::setRayQuery(int posx, int posy) {
+  Ogre::Ray rayMouse = _camera->getCameraToViewportRay
+    (posx/float(_win->getWidth()), posy/float(_win->getHeight()));
+  _raySceneQuery->setRay(rayMouse);
+  _raySceneQuery->setSortByDistance(true);
+  //_raySceneQuery->setQueryMask(mask);
+  return (rayMouse);
+}
+
+void IntroState::createOverlay() {
+  _overlayManager = Ogre::OverlayManager::getSingletonPtr();
+  Ogre::Overlay *overlay = _overlayManager->getByName("Info");
+  overlay->show();
+}
+
 void
 IntroState::exit()
 {
@@ -110,6 +132,9 @@ IntroState::keyPressed
   if (e.key == OIS::KC_SPACE) {
     changeState(PlayState::getSingletonPtr());
   }
+  if (e.key == OIS::KC_ESCAPE) {
+    _exitGame = true;
+  }
 }
 
 void
@@ -125,6 +150,12 @@ void
 IntroState::mouseMoved
 (const OIS::MouseEvent &e)
 {
+  float posx = e.state.X.abs;
+  float posy = e.state.Y.abs;
+
+  Ogre::OverlayElement *oe;
+  oe = _overlayManager->getOverlayElement("cursor");
+  oe->setLeft(posx);  oe->setTop(posy);
 }
 
 void

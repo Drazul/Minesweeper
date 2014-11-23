@@ -12,7 +12,7 @@ Cell::initialize(Cell::Type type, Cell::State state) {
   _type = type;
   _state = state;
   _flag = Flag::NotFlagged;
-  _near_bombs = 0;
+  _near_bombs = 48; /* This is the number 0 in ascii */
 };
 
 void 
