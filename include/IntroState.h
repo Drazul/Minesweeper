@@ -25,7 +25,10 @@
 #include <OIS/OIS.h>
 
 #include "GameState.h"
+#include "minesweeper.h"
+
 #include "MyFrameListener.h"
+
 class IntroState : public Ogre::Singleton<IntroState>, public GameState
 {
  public:
@@ -46,21 +49,25 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   bool frameStarted (const Ogre::FrameEvent& evt);
   bool frameEnded (const Ogre::FrameEvent& evt);
 
+  void createOverlay();
+  void createScene();
+  void createBoardScene();
+  void createGroundScene();
   // Heredados de Ogre::Singleton.
   static IntroState& getSingleton ();
   static IntroState* getSingletonPtr ();
 
-  void createScene();
-  void start();
-  void loadResources();
-
  protected:
+  Minesweeper _minesweeper;
+  Difficulty _level;
+  std::vector<Ogre::Entity*> _entityNodes;
+  MyFrameListener* _framelistener;
+  OverlayManager* _overlayManager;
+
   Ogre::Root* _root;
   Ogre::SceneManager* _sceneManager;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
-
-  MyFrameListener * _framelistener;
 
   bool _exitGame;
 };

@@ -126,7 +126,7 @@ GameManager::configure ()
   }
   
   _renderWindow = _root->initialise(true, "Game State Example");
-  
+
   Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
   
   return true;

@@ -27,7 +27,7 @@
 #include <OIS/OIS.h>
 
 #include "InputManager.h"
-
+#include "MyFrameListener.h"
 class GameState;
 
 class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManager>, public OIS::KeyListener, public OIS::MouseListener

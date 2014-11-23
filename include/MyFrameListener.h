@@ -1,3 +1,6 @@
+#ifndef MyFrameListener_H
+#define MyFrameListener_H
+
 #include <Ogre.h>
 #include <OIS/OIS.h>
 #include "minesweeper.h"
@@ -34,3 +37,5 @@ public:
   ~MyFrameListener();
   bool frameStarted(const FrameEvent& evt);  
 };
+
+#endif
