@@ -40,10 +40,10 @@ Minesweeper::initialize() {
 
 void
 Minesweeper::initialize_empty() {
-  
+  /*
   for(Cell cell: _board){
     cell.initialize(Cell::Type::Empty, Cell::State::NotVisible);
-  }
+  }*/
   
   for(int i = 0; i < (int) _board.size(); i++){
     _board[i].initialize(Cell::Type::Empty, Cell::State::NotVisible);
