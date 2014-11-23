@@ -6,7 +6,7 @@ template<> IntroState* Ogre::Singleton<IntroState>::msSingleton = 0;
 void
 IntroState::enter ()
 {
-  std::cout << "Estado intro " << std::endl;
+  //std::cout << "Estado intro " << std::endl;
   _level = Difficulty::Easy;
   _minesweeper.set_difficulty(_level);
   _minesweeper.initialize();  _root = Ogre::Root::getSingletonPtr();
@@ -14,8 +14,8 @@ IntroState::enter ()
   _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
   _camera = _sceneManager->createCamera("MainCamera");
 
-  _camera->setPosition(Vector3(7.19941, 13.4578, -10.0267));
-  _camera->setDirection(Vector3(-0.00103734, -0.62784, 0.778358));
+  _camera->setPosition(Ogre::Vector3(7.19941, 13.4578, -10.0267));
+  _camera->setDirection(Ogre::Vector3(-0.00103734, -0.62784, 0.778358));
   _camera->setNearClipDistance(0.1);
   _camera->setFarClipDistance(100);
   _root->getAutoCreatedWindow()->addViewport(_camera);
@@ -29,15 +29,15 @@ IntroState::enter ()
   _win = _root->getAutoCreatedWindow();
 
 
-  _raySceneQuery = _sceneManager->createRayQuery(Ray());
+  _raySceneQuery = _sceneManager->createRayQuery(Ogre::Ray());
 
   _root->startRendering();
 
   _exitGame = false;
 }
 
-Ray IntroState::setRayQuery(int posx, int posy) {
-  Ray rayMouse = _camera->getCameraToViewportRay
+Ogre::Ray IntroState::setRayQuery(int posx, int posy) {
+  Ogre::Ray rayMouse = _camera->getCameraToViewportRay
     (posx/float(_win->getWidth()), posy/float(_win->getHeight()));
   _raySceneQuery->setRay(rayMouse);
   _raySceneQuery->setSortByDistance(true);
@@ -46,8 +46,8 @@ Ray IntroState::setRayQuery(int posx, int posy) {
 }
 
 void IntroState::createOverlay() {
-  _overlayManager = OverlayManager::getSingletonPtr();
-  Overlay *overlay = _overlayManager->getByName("Info");
+  _overlayManager = Ogre::OverlayManager::getSingletonPtr();
+  Ogre::Overlay *overlay = _overlayManager->getByName("Info");
   overlay->show();
 }
 
@@ -116,7 +116,7 @@ void
 IntroState::actualizeBoard() {
   //Se debe sustitutir esto por el nivel correspondiente
   int size = _entityNodes.size();
-    std::cout << size << std::endl;
+    //std::cout << size << std::endl;
 
   std::vector<char> visibleBoard = _minesweeper.get_visible_board();
   std::stringstream materialName;
@@ -206,7 +206,7 @@ IntroState::mouseMoved
   float posx = e.state.X.abs;
   float posy = e.state.Y.abs;
 
-  OverlayElement *oe;
+  Ogre::OverlayElement *oe;
   oe = _overlayManager->getOverlayElement("cursor");
   oe->setLeft(posx);  oe->setTop(posy);
 }
@@ -219,32 +219,32 @@ IntroState::mousePressed
   float posx = e.state.X.abs;
   float posy = e.state.Y.abs;
 
-  bool mbleft, mbmiddle, mbright; // Botones del raton pulsados
+  bool mbleft, mbright; // Botones del raton pulsados
 
   mbleft = e.state.buttonDown(OIS::MB_Left);
-  mbmiddle = e.state.buttonDown(OIS::MB_Middle);
   mbright = e.state.buttonDown(OIS::MB_Right);
 
-  Ray r = setRayQuery(posx, posy);
-  RaySceneQueryResult &result = _raySceneQuery->execute();
-  RaySceneQueryResult::iterator it;
+  //Con esto le dices desde donde empezar el rayQuery. El compilador dice que nunca se utiliza
+  setRayQuery(posx, posy);
+  Ogre::RaySceneQueryResult &result = _raySceneQuery->execute();
+  Ogre::RaySceneQueryResult::iterator it;
   it = result.begin();
 
   if (it != result.end()) {
     //Aqui se en la casilla que pincho, puede ejecutarla directamente
-    std::cout << "nombre de la entidad en la que pincho " << it->movable->getParentSceneNode()->getName() << std::endl;
+    //std::cout << "nombre de la entidad en la que pincho " << it->movable->getParentSceneNode()->getName() << std::endl;
     std::string name = it->movable->getParentSceneNode()->getName();
     if(name != "Ground") {
       std::string number = name.substr (4);
-      std::cout << number << std::endl;
+      //std::cout << number << std::endl;
       int index = std::stoi(number);
-      std::cout << index << std::endl;
+      //std::cout << index << std::endl;
 
       //time_t  time1 = 0, time2 = 0;
 
       if (mbleft) {
         _minesweeper.execute(index/10, index % 10);
-        std::cout << "se ha ejecutado" << std::endl;
+        //std::cout << "se ha ejecutado" << std::endl;
       }
       else if (mbright) {
         //time(&time2);
@@ -254,7 +254,7 @@ IntroState::mousePressed
         //if (difftime(time2, time1) > 100) {
           _minesweeper.put_flag(index/10, index % 10);
           //time(&time1);
-          std::cout << "se ha puesto bandera" << std::endl;
+          //std::cout << "se ha puesto bandera" << std::endl;
         //}
       }
       actualizeBoard();

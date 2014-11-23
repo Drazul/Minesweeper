@@ -27,7 +27,6 @@
 #include "GameState.h"
 #include "minesweeper.h"
 
-#include "MyFrameListener.h"
 
 class IntroState : public Ogre::Singleton<IntroState>, public GameState
 {
@@ -63,9 +62,8 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   Minesweeper _minesweeper;
   Difficulty _level;
   std::vector<Ogre::Entity*> _entityNodes;
-  MyFrameListener* _framelistener;
-  OverlayManager* _overlayManager;
-  RenderWindow* _win;
+  Ogre::OverlayManager* _overlayManager;
+  Ogre::RenderWindow* _win;
 
   Ogre::Root* _root;
   Ogre::SceneManager* _sceneManager;
@@ -74,9 +72,9 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
 
   bool _exitGame;
 
-  Ray setRayQuery(int posx, int posy);
+  Ogre::Ray setRayQuery(int posx, int posy);
 
-  RaySceneQuery *_raySceneQuery;
+  Ogre::RaySceneQuery *_raySceneQuery;
 
 };
 
