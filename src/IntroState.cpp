@@ -14,7 +14,7 @@ IntroState::enter ()
 
   if(_camera == nullptr)
     _camera = _sceneManager->createCamera("MenuCamera");
-  //_viewport->setBackgroundColour(Ogre::ColourValue(1.0, 1.0, 1.0));
+  _viewport->setBackgroundColour(Ogre::ColourValue(0, 1.0, 1.0));
 
   _camera->setPosition(Ogre::Vector3(0.5, 4, 12));
   _camera->setDirection(Ogre::Vector3(0, 0, -1));
@@ -49,6 +49,10 @@ void IntroState::createMenu() {
   Ogre::Entity* moreEnt = _sceneManager->createEntity("more.mesh");
   Ogre::Entity* quitEnt = _sceneManager->createEntity("quit.mesh");
     
+  playEnt->setMaterialName("playOFF");
+  moreEnt->setMaterialName("moreOFF");
+  quitEnt->setMaterialName("quitOFF");
+
   //wallNode->attachObject(wallEnt);
   playNode->attachObject(playEnt);
   moreNode->attachObject(moreEnt);
