@@ -8,7 +8,7 @@ IntroState::enter ()
 {
   _root = Ogre::Root::getSingletonPtr();
 
-  _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
+  _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "IntroSceneManager");
 
   _camera = _sceneManager->createCamera("MenuCamera");
   //_viewport->setBackgroundColour(Ogre::ColourValue(1.0, 1.0, 1.0));
@@ -31,23 +31,23 @@ IntroState::enter ()
 void IntroState::createMenu() {
   Ogre::SceneNode* menuSceneNode = _sceneManager->createSceneNode("MenuScene");
 
-  Ogre::SceneNode* wallNode = menuSceneNode->createChildSceneNode("wallNode");
+  //Ogre::SceneNode* wallNode = menuSceneNode->createChildSceneNode("wallNode");
   Ogre::SceneNode* playNode = menuSceneNode->createChildSceneNode("playNode");
   Ogre::SceneNode* moreNode = menuSceneNode->createChildSceneNode("moreNode");
   Ogre::SceneNode* quitNode = menuSceneNode->createChildSceneNode("quitNode");
 
 
-  Ogre::Entity* wallEnt = _sceneManager->createEntity("wall.mesh");
+  //Ogre::Entity* wallEnt = _sceneManager->createEntity("wall.mesh");
   Ogre::Entity* playEnt = _sceneManager->createEntity("play.mesh");
   Ogre::Entity* moreEnt = _sceneManager->createEntity("more.mesh");
   Ogre::Entity* quitEnt = _sceneManager->createEntity("quit.mesh");
     
-  wallNode->attachObject(wallEnt);
+  //wallNode->attachObject(wallEnt);
   playNode->attachObject(playEnt);
   moreNode->attachObject(moreEnt);
   quitNode->attachObject(quitEnt);
 
-  wallNode->setPosition(0, 0, 0);
+  //wallNode->setPosition(0, 0, 0);
   playNode->setPosition(0, 7, 0);
   moreNode->setPosition(0, 4.5, 0);
   quitNode->setPosition(0, 2, 0);

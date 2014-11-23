@@ -13,7 +13,7 @@ PlayState::enter ()
 
   _root = Ogre::Root::getSingletonPtr();
 
-  _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
+  _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "PlaySceneManager");
   _camera = _sceneManager->createCamera("MainCamera");
 
   _camera->setPosition(Ogre::Vector3(7.19941, 13.4578, -10.0267));
