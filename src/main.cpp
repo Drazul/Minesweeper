@@ -12,7 +12,7 @@ int main() {
 #define UNUSED_VARIABLE(x) (void)x
 
 #include "GameManager.h"
-//#include "IntroState.h"
+#include "IntroState.h"
 #include "PlayState.h"
 #include "PauseState.h"
 
@@ -23,11 +23,11 @@ using namespace std;
 int main () {
 
   GameManager* game = new GameManager();
-  //IntroState* introState = new IntroState();
+  IntroState* introState = new IntroState();
   PlayState* playState = new PlayState();
   PauseState* pauseState = new PauseState();
 
-  //UNUSED_VARIABLE(introState);
+  UNUSED_VARIABLE(introState);
   UNUSED_VARIABLE(playState);
   UNUSED_VARIABLE(pauseState);
     
@@ -35,6 +35,7 @@ int main () {
     {
       // Inicializa el juego y transición al primer estado.
       game->start(PlayState::getSingletonPtr());
+      //game->start(IntroState::getSingletonPtr());
     }
   catch (Ogre::Exception& e)
     {
