@@ -1,4 +1,10 @@
+Dependencias: 
+
+- Ogre3D (como motor de renderizado)
+- OIS (como gestor de eventos de teclado y ratón)
+
 Este repositorio utiliza el framework de pruebas bandit, que a su vez utiliza el framework snowhouse
+(una vez probada la logica ya no tenia sentido seguir con los test y se han eliminado).
 
 
 https://github.com/joakimkarlsson/bandit
