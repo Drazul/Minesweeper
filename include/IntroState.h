@@ -53,6 +53,8 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   void createScene();
   void createBoardScene();
   void createGroundScene();
+  void actualizeBoard();
+
   // Heredados de Ogre::Singleton.
   static IntroState& getSingleton ();
   static IntroState* getSingletonPtr ();
@@ -63,6 +65,7 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   std::vector<Ogre::Entity*> _entityNodes;
   MyFrameListener* _framelistener;
   OverlayManager* _overlayManager;
+  RenderWindow* _win;
 
   Ogre::Root* _root;
   Ogre::SceneManager* _sceneManager;
@@ -70,6 +73,11 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   Ogre::Camera* _camera;
 
   bool _exitGame;
+
+  Ray setRayQuery(int posx, int posy);
+
+  RaySceneQuery *_raySceneQuery;
+
 };
 
 #endif

@@ -25,10 +25,24 @@ IntroState::enter ()
 
   //_framelistener = new MyFrameListener(_root->getAutoCreatedWindow(), _camera, _overlayManager, _sceneManager, _minesweeper, _entityNodes);
   //_root->addFrameListener(_framelistener);
-  
+
+  _win = _root->getAutoCreatedWindow();
+
+
+  _raySceneQuery = _sceneManager->createRayQuery(Ray());
+
   _root->startRendering();
 
   _exitGame = false;
+}
+
+Ray IntroState::setRayQuery(int posx, int posy) {
+  Ray rayMouse = _camera->getCameraToViewportRay
+    (posx/float(_win->getWidth()), posy/float(_win->getHeight()));
+  _raySceneQuery->setRay(rayMouse);
+  _raySceneQuery->setSortByDistance(true);
+  //_raySceneQuery->setQueryMask(mask);
+  return (rayMouse);
 }
 
 void IntroState::createOverlay() {
@@ -41,7 +55,6 @@ void IntroState::createOverlay() {
 void IntroState::createScene() {
 
   createGroundScene();
-  //createPlane4RayQuery();
   createBoardScene();
 }
 
@@ -97,6 +110,39 @@ void IntroState::createGroundScene() {
 
   //Adjunto al nodo de escena principal el nodo de escena creado
   _sceneManager->getRootSceneNode()->addChild(GroundNode);
+}
+
+void
+IntroState::actualizeBoard() {
+  //Se debe sustitutir esto por el nivel correspondiente
+  int size = _entityNodes.size();
+    std::cout << size << std::endl;
+
+  std::vector<char> visibleBoard = _minesweeper.get_visible_board();
+  std::stringstream materialName;
+
+  for(int i = size-1; i >= 0; i--) {
+    switch(visibleBoard[i]){
+      case 'B':
+        _entityNodes[i]->setMaterialName("bomba");
+        break;
+      case '*':
+        _entityNodes[i]->setMaterialName("hierba");
+        break;
+      case ' ':
+        _entityNodes[i]->setVisible(false);
+        break;
+      case 'F':
+        //_entityNodes[i]->getParentSceneNode()->attachObject(_sceneManager->createEntity("Flagpole_Flag_Flag1.mesh"));
+        _entityNodes[i]->setMaterialName("flag");
+        break;
+      default:
+        materialName.str(""); materialName.str(""); // Limpiamos el stream
+        materialName << "numero" << visibleBoard[i];
+        _entityNodes[i]->setMaterialName(materialName.str());
+        break;
+    }
+  }
 }
 
 void
@@ -157,12 +203,20 @@ void
 IntroState::mouseMoved
 (const OIS::MouseEvent &e)
 {
+  float posx = e.state.X.abs;
+  float posy = e.state.Y.abs;
+
+  OverlayElement *oe;
+  oe = _overlayManager->getOverlayElement("cursor");
+  oe->setLeft(posx);  oe->setTop(posy);
 }
 
 void
 IntroState::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
+  //MoouseButtonID MB_Left = 0, MB_Right,
+  std::cout << e.state.X.rel << std::endl;
 }
 
 void
