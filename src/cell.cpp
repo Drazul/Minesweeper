@@ -19,11 +19,12 @@ void
 Cell::put_flag() {
   if(_state == Cell::State::NotVisible)
     _flag = Flag::Flagged;
+
 }
 
 void
 Cell::remove_flag() {
-	_flag = Flag::Flagged;
+	_flag = Flag::NotFlagged;
 }
 
 bool

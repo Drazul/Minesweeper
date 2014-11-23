@@ -1,17 +1,36 @@
 #include <Ogre.h>
 #include <OIS/OIS.h>
+#include "minesweeper.h"
 
-class MyFrameListener : public Ogre::FrameListener {
+#define STAGE 1 << 0  // Mascara para el escenario
+#define CUBE1 1 << 1  // Mascara para objetos de tipo 1
+#define CUBE2 1 << 2  // Mascara para objetos de tipo 2
+
+using namespace Ogre;
+using namespace std;
+
+class MyFrameListener : public FrameListener {
 private:
   OIS::InputManager* _inputManager;
   OIS::Keyboard* _keyboard;
   OIS::Mouse* _mouse;
-  Ogre::Camera* _camera;
-  Ogre::SceneNode *_node;
+  Camera* _camera;
+  RenderWindow* _win;
+  OverlayManager* _overlayManager;
+  SceneManager* _sceneManager;
+  RaySceneQuery *_raySceneQuery;
+  SceneNode *_selectedNode;
 
+  std::vector<Ogre::Entity*> _entityNodes;
+  Minesweeper _minesweeper;
+
+  Ray setRayQuery(int posx, int posy, uint32 mask);
+  void actualizeBoard();
+  
 public:
-  MyFrameListener(Ogre::RenderWindow* win, Ogre::Camera* cam, 
-		  Ogre::SceneNode* node);
+  MyFrameListener(RenderWindow* win, Camera* cam, 
+		  OverlayManager* om, SceneManager* sm, Minesweeper minesweeper,
+      std::vector<Ogre::Entity*> entityNodes);
   ~MyFrameListener();
-  bool frameStarted(const Ogre::FrameEvent& evt);  
+  bool frameStarted(const FrameEvent& evt);  
 };

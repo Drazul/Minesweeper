@@ -1,52 +1,189 @@
 #include "MyFrameListener.h"
 
-MyFrameListener::MyFrameListener(Ogre::RenderWindow* win, 
-				 Ogre::Camera* cam, 
-				 Ogre::SceneNode *node) {
-  OIS::ParamList param;
-  size_t windowHandle;  std::ostringstream wHandleStr;
+MyFrameListener::MyFrameListener(RenderWindow* win, Camera* cam, 
+				 OverlayManager *om,SceneManager *sm, Minesweeper minesweeper,
+         std::vector<Ogre::Entity*> entityNodes){
 
-  _camera = cam;  _node = node;
+  OIS::ParamList param; size_t windowHandle;  ostringstream wHandleStr;
+
+  _entityNodes = entityNodes;
+  _minesweeper = minesweeper;
+
+  _camera = cam;  _overlayManager = om;
+  _sceneManager = sm; _win = win;
   
-  win->getCustomAttribute("WINDOW", &windowHandle);
+  srand((unsigned)time(NULL));   // Semilla aleatorios
+  _win->getCustomAttribute("WINDOW", &windowHandle);
   wHandleStr << windowHandle;
-  param.insert(std::make_pair("WINDOW", wHandleStr.str()));
+  param.insert(make_pair("WINDOW", wHandleStr.str()));
   
   _inputManager = OIS::InputManager::createInputSystem(param);
   _keyboard = static_cast<OIS::Keyboard*>
     (_inputManager->createInputObject(OIS::OISKeyboard, false));
   _mouse = static_cast<OIS::Mouse*>
     (_inputManager->createInputObject(OIS::OISMouse, false));
+  _mouse->getMouseState().width = _win->getWidth();
+  _mouse->getMouseState().height = _win->getHeight();
+
+  _raySceneQuery = _sceneManager->createRayQuery(Ray());
+  _selectedNode = NULL;
 }
 
 MyFrameListener::~MyFrameListener() {
   _inputManager->destroyInputObject(_keyboard);
   _inputManager->destroyInputObject(_mouse);
+  _sceneManager->destroyQuery(_raySceneQuery);
   OIS::InputManager::destroyInputSystem(_inputManager);
 }
 
+Ray MyFrameListener::setRayQuery(int posx, int posy, uint32 mask) {
+  Ray rayMouse = _camera->getCameraToViewportRay
+    (posx/float(_win->getWidth()), posy/float(_win->getHeight()));
+  _raySceneQuery->setRay(rayMouse);
+  _raySceneQuery->setSortByDistance(true);
+  _raySceneQuery->setQueryMask(mask);
+  return (rayMouse);
+}
 
-bool MyFrameListener::frameStarted(const Ogre::FrameEvent& evt) {
-  Ogre::Vector3 vt(0,0,0);     Ogre::Real tSpeed = 20.0;  
-  Ogre::Real r = 0;
-  Ogre::Real deltaT = evt.timeSinceLastFrame;
-/*
-  _keyboard->capture();
-  if(_keyboard->isKeyDown(OIS::KC_ESCAPE)) return false;
-  if(_keyboard->isKeyDown(OIS::KC_UP))    vt+=Ogre::Vector3(0,0,-1);
-  if(_keyboard->isKeyDown(OIS::KC_DOWN))  vt+=Ogre::Vector3(0,0,1);
-  if(_keyboard->isKeyDown(OIS::KC_LEFT))  vt+=Ogre::Vector3(-1,0,0);
-  if(_keyboard->isKeyDown(OIS::KC_RIGHT)) vt+=Ogre::Vector3(1,0,0);
+bool MyFrameListener::frameStarted(const FrameEvent& evt) {
+  Vector3 vt(0,0,0);     Real tSpeed = 10.0;  
+  Real deltaT = evt.timeSinceLastFrame;
+
+  bool mbleft, mbmiddle, mbright; // Botones del raton pulsados
+
+  _keyboard->capture();  _mouse->capture();   // Captura eventos
+
+  int posx = _mouse->getMouseState().X.abs;   // Posicion del puntero
+  int posy = _mouse->getMouseState().Y.abs;   //  en pixeles.
+
+  if(_keyboard->isKeyDown(OIS::KC_ESCAPE)) return false;   // Exit!
+
+  // Operaciones posibles con el nodo seleccionado -------------------
+  if (_selectedNode != NULL) {
+    Real deltaTaux = deltaT;
+    if(_keyboard->isKeyDown(OIS::KC_LSHIFT) ||    // Si pulsamos Shift
+       _keyboard->isKeyDown(OIS::KC_RSHIFT))      // invertimos la
+      deltaTaux *= -1;                            // operacion
+    if(_keyboard->isKeyDown(OIS::KC_S))   
+      _selectedNode->setScale(_selectedNode->getScale()+deltaTaux);
+    if(_keyboard->isKeyDown(OIS::KC_R)) 
+      _selectedNode->yaw(Degree(90)*deltaTaux);
+    if(_keyboard->isKeyDown(OIS::KC_DELETE)) { 
+      _sceneManager->getRootSceneNode()->
+	removeAndDestroyChild(_selectedNode->getName());
+      _selectedNode = NULL;
+    }
+  }
+
+  // Si usamos la rueda, desplazamos en Z la camara ------------------
+  vt+= Vector3(0,0,-10)*deltaT * _mouse->getMouseState().Z.rel;   
   _camera->moveRelative(vt * deltaT * tSpeed);
 
-  if(_keyboard->isKeyDown(OIS::KC_R)) r+=180;
-  _node->yaw(Ogre::Degree(r * deltaT));
+  // Botones del raton pulsados? -------------------------------------
+  mbleft = _mouse->getMouseState().buttonDown(OIS::MB_Left);
+  mbmiddle = _mouse->getMouseState().buttonDown(OIS::MB_Middle);
+  mbright = _mouse->getMouseState().buttonDown(OIS::MB_Right);
   
-  _mouse->capture();
-  float rotx = _mouse->getMouseState().X.rel * deltaT * -1;
-  float roty = _mouse->getMouseState().Y.rel * deltaT * -1;
-  _camera->yaw(Ogre::Radian(rotx));
-  _camera->pitch(Ogre::Radian(roty));
-*/
+  if (mbmiddle) { // Con boton medio pulsado, rotamos camara ---------
+    float rotx = _mouse->getMouseState().X.rel * deltaT * -1;
+    float roty = _mouse->getMouseState().Y.rel * deltaT * -1;
+    _camera->yaw(Radian(rotx));
+    _camera->pitch(Radian(roty));
+    std::cout << "camara position: " << _camera->getPosition() << std::endl;
+    std::cout << "camara direction: " << _camera->getRealDirection() << std::endl;
+
+    cout << "Boton Medio" << endl;
+  }
+  
+  if (mbleft || mbright) {  // Boton izquierdo o derecho -------------
+    uint32 mask;
+    if (mbleft) { // Variables y codigo especifico si es izquierdo
+      cout << "Boton Izquierdo" << endl;
+      mask = STAGE | CUBE1 | CUBE2;  // Podemos elegir todo
+    }
+    if (mbright) { // Variables y codigo especifico si es derecho
+      cout << "Boton Derecho" << endl;
+      mask = ~STAGE;   // Seleccionamos todo menos el escenario
+    }
+
+    if (_selectedNode != NULL) {  // Si habia alguno seleccionado...
+      _selectedNode->showBoundingBox(false);  _selectedNode = NULL;  
+    }
+
+    Ray r = setRayQuery(posx, posy, mask);
+    RaySceneQueryResult &result = _raySceneQuery->execute();
+    RaySceneQueryResult::iterator it;
+    it = result.begin();
+
+    if (it != result.end()) {
+      //Aqui se en la casilla que pincho, puede ejecutarla directamente
+      std::cout << "nombre de la entidad en la que pincho " << it->movable->getParentSceneNode()->getName() << std::endl;
+      std::string name = it->movable->getParentSceneNode()->getName();
+      if(name != "Ground") {
+        std::string number = name.substr (4);
+        std::cout << number << std::endl;
+        int index = std::stoi(number);
+        std::cout << index << std::endl;
+
+        //time_t  time1 = 0, time2 = 0;
+
+        if (mbleft) {
+          _minesweeper.execute(index/10, index % 10);
+          std::cout << "se ha ejecutado" << std::endl;
+        }
+        else if (mbright) {
+          //time(&time2);
+          //std::cout << "time2 - time1: " << difftime(time1, time2) << std::endl;
+          //std::cout << "time1: " << time1 << " time2: " << time2 << std::endl;
+
+          //if (difftime(time2, time1) > 100) {
+            _minesweeper.put_flag(index/10, index % 10);
+            //time(&time1);
+            std::cout << "se ha puesto bandera" << std::endl;
+          //}
+        }
+        actualizeBoard();
+      }
+    }
+  }
+  
+  // Gestion del overlay ---------------------------------------------
+  OverlayElement *oe;
+  oe = _overlayManager->getOverlayElement("cursor");
+  oe->setLeft(posx);  oe->setTop(posy);
+
   return true;
+}
+
+void
+MyFrameListener::actualizeBoard() {
+  //Se debe sustitutir esto por el nivel correspondiente
+  int size = _entityNodes.size();
+    std::cout << size << std::endl;
+
+  std::vector<char> visibleBoard = _minesweeper.get_visible_board();
+  std::stringstream materialName;
+
+  for(int i = size-1; i >= 0; i--) {
+    switch(visibleBoard[i]){
+      case 'B':
+        _entityNodes[i]->setMaterialName("bomba");
+        break;
+      case '*':
+        _entityNodes[i]->setMaterialName("hierba");
+        break;
+      case ' ':
+        _entityNodes[i]->setVisible(false);
+        break;
+      case 'F':
+        //_entityNodes[i]->getParentSceneNode()->attachObject(_sceneManager->createEntity("Flagpole_Flag_Flag1.mesh"));
+        _entityNodes[i]->setMaterialName("flag");
+        break;
+      default:
+        materialName.str(""); materialName.str(""); // Limpiamos el stream
+        materialName << "numero" << visibleBoard[i];
+        _entityNodes[i]->setMaterialName(materialName.str());
+        break;
+    }
+  }
 }
