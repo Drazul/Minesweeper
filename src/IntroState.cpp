@@ -216,7 +216,50 @@ IntroState::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
   //MoouseButtonID MB_Left = 0, MB_Right,
-  std::cout << e.state.X.rel << std::endl;
+  float posx = e.state.X.abs;
+  float posy = e.state.Y.abs;
+
+  bool mbleft, mbmiddle, mbright; // Botones del raton pulsados
+
+  mbleft = e.state.buttonDown(OIS::MB_Left);
+  mbmiddle = e.state.buttonDown(OIS::MB_Middle);
+  mbright = e.state.buttonDown(OIS::MB_Right);
+
+  Ray r = setRayQuery(posx, posy);
+  RaySceneQueryResult &result = _raySceneQuery->execute();
+  RaySceneQueryResult::iterator it;
+  it = result.begin();
+
+  if (it != result.end()) {
+    //Aqui se en la casilla que pincho, puede ejecutarla directamente
+    std::cout << "nombre de la entidad en la que pincho " << it->movable->getParentSceneNode()->getName() << std::endl;
+    std::string name = it->movable->getParentSceneNode()->getName();
+    if(name != "Ground") {
+      std::string number = name.substr (4);
+      std::cout << number << std::endl;
+      int index = std::stoi(number);
+      std::cout << index << std::endl;
+
+      //time_t  time1 = 0, time2 = 0;
+
+      if (mbleft) {
+        _minesweeper.execute(index/10, index % 10);
+        std::cout << "se ha ejecutado" << std::endl;
+      }
+      else if (mbright) {
+        //time(&time2);
+        //std::cout << "time2 - time1: " << difftime(time1, time2) << std::endl;
+        //std::cout << "time1: " << time1 << " time2: " << time2 << std::endl;
+
+        //if (difftime(time2, time1) > 100) {
+          _minesweeper.put_flag(index/10, index % 10);
+          //time(&time1);
+          std::cout << "se ha puesto bandera" << std::endl;
+        //}
+      }
+      actualizeBoard();
+    }
+  }
 }
 
 void
