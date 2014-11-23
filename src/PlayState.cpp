@@ -6,78 +6,35 @@ template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
 void
 PlayState::enter ()
 {
-  //std::cout << "Estado intro " << std::endl;
   _level = Difficulty::Easy;
+
   _minesweeper.set_difficulty(_level);
-  _minesweeper.initialize();  _root = Ogre::Root::getSingletonPtr();
+  _minesweeper.initialize();  
+
+  _root = Ogre::Root::getSingletonPtr();
 
   _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
   _camera = _sceneManager->createCamera("MainCamera");
 
-  //_camera->setPosition(Ogre::Vector3(7.19941, 13.4578, -10.0267));
-  //_camera->setDirection(Ogre::Vector3(-0.00103734, -0.62784, 0.778358));
-  _camera->setPosition(Ogre::Vector3(0.5, 4, 12));
-  _camera->setDirection(Ogre::Vector3(0, 0, -1));
+  _camera->setPosition(Ogre::Vector3(7.19941, 13.4578, -10.0267));
+  _camera->setDirection(Ogre::Vector3(-0.00103734, -0.62784, 0.778358));
 
   _camera->setNearClipDistance(0.1);
   _camera->setFarClipDistance(100);
-  _root->getAutoCreatedWindow()->addViewport(_camera);
 
-  createMenu();
-  //createScene();
+  _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
+
+  createScene();
   createOverlay();
 
-  //_framelistener = new MyFrameListener(_root->getAutoCreatedWindow(), _camera, _overlayManager, _sceneManager, _minesweeper, _entityNodes);
-  //_root->addFrameListener(_framelistener);
 
   _win = _root->getAutoCreatedWindow();
-
 
   _raySceneQuery = _sceneManager->createRayQuery(Ogre::Ray());
 
   _root->startRendering();
 
   _exitGame = false;
-}
-
-void PlayState::createMenu() {
-   Ogre::SceneNode* menuSceneNode = _sceneManager->createSceneNode("MenuScene");
-
-  Ogre::SceneNode* wallNode = menuSceneNode->createChildSceneNode("wallNode");
-  Ogre::SceneNode* playNode = menuSceneNode->createChildSceneNode("playNode");
-  Ogre::SceneNode* moreNode = menuSceneNode->createChildSceneNode("moreNode");
-  Ogre::SceneNode* quitNode = menuSceneNode->createChildSceneNode("quitNode");
-
-
-  Ogre::Entity* wallEnt = _sceneManager->createEntity("wall.mesh");
-  Ogre::Entity* playEnt = _sceneManager->createEntity("play.mesh");
-  Ogre::Entity* moreEnt = _sceneManager->createEntity("more.mesh");
-  Ogre::Entity* quitEnt = _sceneManager->createEntity("quit.mesh");
-    
-  wallNode->attachObject(wallEnt);
-  playNode->attachObject(playEnt);
-  moreNode->attachObject(moreEnt);
-  quitNode->attachObject(quitEnt);
-
-  wallNode->setPosition(0, 0, 0);
-  playNode->setPosition(0, 7, 0);
-  moreNode->setPosition(0, 4.5, 0);
-  quitNode->setPosition(0, 2, 0);
-
-  playNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
-  moreNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
-  quitNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
-
-  playNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
-  moreNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
-  quitNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
-
-
-  _sceneManager->getRootSceneNode()->addChild(menuSceneNode);
-
-//camara position: Vector3(0.5, 4, 12)
-//camara direction: Vector3(0, 0, -1)
-
 }
 
 Ogre::Ray PlayState::setRayQuery(int posx, int posy) {

@@ -46,13 +46,15 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   bool frameStarted (const Ogre::FrameEvent& evt);
   bool frameEnded (const Ogre::FrameEvent& evt);
 
+  void createMenu();
+
   // Heredados de Ogre::Singleton.
   static IntroState& getSingleton ();
   static IntroState* getSingletonPtr ();
 
  protected:
   Ogre::Root* _root;
-  Ogre::SceneManager* _sceneMgr;
+  Ogre::SceneManager* _sceneManager;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
 

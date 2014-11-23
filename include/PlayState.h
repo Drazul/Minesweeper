@@ -34,7 +34,6 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void createGroundScene();
   void actualizeBoard();
 
-  void createMenu();
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
   static PlayState* getSingletonPtr ();

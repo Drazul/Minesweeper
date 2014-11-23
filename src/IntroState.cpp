@@ -8,52 +8,69 @@ IntroState::enter ()
 {
   _root = Ogre::Root::getSingletonPtr();
 
-  _sceneMgr = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
-  _camera = _sceneMgr->createCamera("IntroCamera");
-  _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
+  _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
+
+  _camera = _sceneManager->createCamera("MenuCamera");
   //_viewport->setBackgroundColour(Ogre::ColourValue(1.0, 1.0, 1.0));
 
-    Ogre::Entity * entity;
-     entity = _sceneMgr->createEntity("Cell.mesh");
-     entity->setMaterialName("play_btn");
+  _camera->setPosition(Ogre::Vector3(0.5, 4, 12));
+  _camera->setDirection(Ogre::Vector3(0, 0, -1));
 
-     Ogre::SceneNode* node = _sceneMgr->createSceneNode("playnode");
-     node->attachObject(entity);
-     _sceneMgr->getRootSceneNode()->addChild(node);
-     node->setScale(2, 1, 1);
-     node->setPosition(0, 3, 0);
-     node->pitch(Ogre::Degree(90), Ogre::SceneNode::TS_LOCAL);
-     node->yaw(Ogre::Degree(180), Ogre::SceneNode::TS_LOCAL);
+  _camera->setNearClipDistance(0.1);
+  _camera->setFarClipDistance(100);
 
-     Ogre::SceneNode* node2 = _sceneMgr->createSceneNode("quitnode");
-     entity = _sceneMgr->createEntity("Cell.mesh");
-     entity->setMaterialName("exit_btn");
-     node2->attachObject(entity);
-     _sceneMgr->getRootSceneNode()->addChild(node2);
-     node2->setScale(2, 1, 1);
-     node2->setPosition(0, 0, 0);
-     node2->pitch(Ogre::Degree(90), Ogre::SceneNode::TS_LOCAL);
-     node2->yaw(Ogre::Degree(180), Ogre::SceneNode::TS_LOCAL);
+  _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 
-     Ogre::SceneNode* node3 = _sceneMgr->createSceneNode("creditsnode");
-     entity = _sceneMgr->createEntity("Cell.mesh");
-     entity->setMaterialName("credits_btn");
-     node3->attachObject(entity);
-     _sceneMgr->getRootSceneNode()->addChild(node3);
-     node3->setScale(2, 1, 1);
-     node3->setPosition(0, -3, 0);
-     node3->pitch(Ogre::Degree(90), Ogre::SceneNode::TS_LOCAL);
-     node3->yaw(Ogre::Degree(180), Ogre::SceneNode::TS_LOCAL);
+  createMenu();
 
   _root->startRendering();
 
   _exitGame = false;
 }
 
+void IntroState::createMenu() {
+  Ogre::SceneNode* menuSceneNode = _sceneManager->createSceneNode("MenuScene");
+
+  Ogre::SceneNode* wallNode = menuSceneNode->createChildSceneNode("wallNode");
+  Ogre::SceneNode* playNode = menuSceneNode->createChildSceneNode("playNode");
+  Ogre::SceneNode* moreNode = menuSceneNode->createChildSceneNode("moreNode");
+  Ogre::SceneNode* quitNode = menuSceneNode->createChildSceneNode("quitNode");
+
+
+  Ogre::Entity* wallEnt = _sceneManager->createEntity("wall.mesh");
+  Ogre::Entity* playEnt = _sceneManager->createEntity("play.mesh");
+  Ogre::Entity* moreEnt = _sceneManager->createEntity("more.mesh");
+  Ogre::Entity* quitEnt = _sceneManager->createEntity("quit.mesh");
+    
+  wallNode->attachObject(wallEnt);
+  playNode->attachObject(playEnt);
+  moreNode->attachObject(moreEnt);
+  quitNode->attachObject(quitEnt);
+
+  wallNode->setPosition(0, 0, 0);
+  playNode->setPosition(0, 7, 0);
+  moreNode->setPosition(0, 4.5, 0);
+  quitNode->setPosition(0, 2, 0);
+
+  playNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
+  moreNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
+  quitNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
+
+  playNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
+  moreNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
+  quitNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
+
+
+  _sceneManager->getRootSceneNode()->addChild(menuSceneNode);
+
+//camara position: Vector3(0.5, 4, 12)
+//camara direction: Vector3(0, 0, -1)
+}
+
 void
 IntroState::exit()
 {
-  _sceneMgr->clearScene();
+  _sceneManager->clearScene();
   _root->getAutoCreatedWindow()->removeAllViewports();
 }
 

@@ -34,8 +34,8 @@ int main () {
   try
     {
       // Inicializa el juego y transición al primer estado.
-      game->start(PlayState::getSingletonPtr());
-      //game->start(IntroState::getSingletonPtr());
+      //game->start(PlayState::getSingletonPtr());
+      game->start(IntroState::getSingletonPtr());
     }
   catch (Ogre::Exception& e)
     {
