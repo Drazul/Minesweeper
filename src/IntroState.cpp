@@ -45,9 +45,9 @@ void IntroState::createMenu() {
 
 
   //Ogre::Entity* wallEnt = _sceneManager->createEntity("wall.mesh");
-  Ogre::Entity* _playEnt = _sceneManager->createEntity("play.mesh");
-  Ogre::Entity* _moreEnt = _sceneManager->createEntity("more.mesh");
-  Ogre::Entity* _quitEnt = _sceneManager->createEntity("quit.mesh");
+  _playEnt = _sceneManager->createEntity("play.mesh");
+  _moreEnt = _sceneManager->createEntity("more.mesh");
+  _quitEnt = _sceneManager->createEntity("quit.mesh");
   Ogre::Entity* backgroundEnt = _sceneManager->createEntity("cell.mesh");
 
   _playEnt->setMaterialName("playOFF");
@@ -121,6 +121,9 @@ bool
 IntroState::frameStarted
 (const Ogre::FrameEvent& evt) 
 {
+  if (_exitGame)
+    return false;
+
   return true;
 }
 
@@ -167,7 +170,7 @@ IntroState::mouseMoved
   Ogre::OverlayElement *oe;
   oe = _overlayManager->getOverlayElement("cursor");
   oe->setLeft(posx);  oe->setTop(posy);
-/*
+
   bool mbleft, mbright; // Botones del raton pulsados
 
   mbleft = e.state.buttonDown(OIS::MB_Left);
@@ -197,7 +200,7 @@ IntroState::mouseMoved
       else
         _quitEnt->setMaterialName("quitOFF");
     }
-  }*/
+  }
 }
 
 void
@@ -228,6 +231,7 @@ IntroState::mousePressed
           changeState(PlayState::getSingletonPtr());
         } else if(name.find("quit") == 0) {
           _exitGame = true;
+          //std::cout << _exitGame << std::endl;
         }
       }
     }
