@@ -41,7 +41,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
  protected:
   Minesweeper _minesweeper;
   Difficulty _level;
-  std::vector<Ogre::Entity*> _entityNodes;
+  std::vector<std::pair<Ogre::Entity*, Ogre::Entity*>> _entityNodes;
   Ogre::OverlayManager* _overlayManager;
   Ogre::RenderWindow* _win;
 

@@ -65,7 +65,11 @@ void PlayState::createScene() {
 void PlayState::createBoardScene() {
   //Se debe sustitutir esto por el nivel correspondiente
   Ogre::Entity * entity;
+  Ogre::Entity * flagEnt;
+
   Ogre::SceneNode * sceneNode = _sceneManager->createSceneNode("BoardSceneNode");
+
+  Ogre::SceneNode * sceneNodeFlags;
   Ogre::SceneNode * sceneNodeCells;
   std::stringstream sceneNodeName;
 
@@ -73,20 +77,30 @@ void PlayState::createBoardScene() {
 
   for(int i = 0; i < _level; i++) {
     for(int j = 0; j < _level; j++) {
+      sceneNodeName.str(""); sceneNodeName.str(""); // Limpiamos el stream
       sceneNodeName << "Cell" << i << j << "";
-
       sceneNodeCells = _sceneManager->createSceneNode(sceneNodeName.str());
-      entity = _sceneManager->createEntity("Cell.mesh");
-      entity->setMaterialName("hierba");
-
-      sceneNodeCells->attachObject(entity);
-      //Multiplico por 2 porque ese es el tamaño de cada celda, el 0.1 restante es para separarlas un poquito
-      sceneNodeCells->setPosition(2.1 * i, 0, 2.1 * j);
-      sceneNode->addChild(sceneNodeCells);
 
       sceneNodeName.str(""); sceneNodeName.str(""); // Limpiamos el stream
+      sceneNodeName << "Flag" << i << j << "";
+      sceneNodeFlags = _sceneManager->createSceneNode(sceneNodeName.str());
 
-      _entityNodes.push_back(entity);
+      entity = _sceneManager->createEntity("Cell.mesh");
+      entity->setMaterialName("hierba");
+      sceneNodeCells->attachObject(entity);
+      sceneNodeCells->setPosition(2.1 * i, 0, 2.1 * j);
+
+      flagEnt = _sceneManager->createEntity("Flagpole_Flag_Flag1.mesh");
+      sceneNodeFlags->attachObject(flagEnt);
+      sceneNodeFlags->setPosition(2.1 * i, 0, 2.1 * j);
+      sceneNodeFlags->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
+      sceneNodeFlags->roll(Ogre::Degree(180), Ogre::Node::TS_LOCAL);
+      flagEnt->setVisible(false);
+
+      sceneNode->addChild(sceneNodeCells);
+      sceneNode->addChild(sceneNodeFlags);
+
+      _entityNodes.push_back(std::make_pair(entity, flagEnt));
     }
   }
   _sceneManager->getRootSceneNode()->addChild(sceneNode);
@@ -118,40 +132,32 @@ void PlayState::createGroundScene() {
 
 void
 PlayState::actualizeBoard() {
-  //Se debe sustitutir esto por el nivel correspondiente
   int size = _entityNodes.size();
-    //std::cout << size << std::endl;
 
   std::vector<char> visibleBoard = _minesweeper.get_visible_board();
   std::stringstream materialName;
-  Ogre::SceneNode* flagSceneNode = _sceneManager->createSceneNode("flagSceneNode");
-  Ogre::Entity * flagEnt = _sceneManager->createEntity("Flagpole_Flag_Flag1.mesh");
-
-  flagSceneNode->attachObject(flagEnt);
-  flagSceneNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
-  flagSceneNode->roll(Ogre::Degree(180), Ogre::Node::TS_LOCAL);
-  //flagSceneNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
 
   for(int i = size-1; i >= 0; i--) {
-    _entityNodes[i]->setVisible(true);
+    _entityNodes[i].first->setVisible(true);
+    _entityNodes[i].second->setVisible(false);
+
     switch(visibleBoard[i]){
       case 'B':
-        _entityNodes[i]->setMaterialName("bomba");
+        _entityNodes[i].first->setMaterialName("bomba");
         break;
       case '*':
-        _entityNodes[i]->setMaterialName("hierba");
+        _entityNodes[i].first->setMaterialName("hierba");
         break;
       case ' ':
-        _entityNodes[i]->setVisible(false);
+        _entityNodes[i].first->setVisible(false);
         break;
       case 'F':
-        _entityNodes[i]->getParentSceneNode()->addChild(flagSceneNode);
-        _entityNodes[i]->setMaterialName("flag");
+        _entityNodes[i].second->setVisible(true);
         break;
       default:
         materialName.str(""); materialName.str(""); // Limpiamos el stream
         materialName << "numero" << visibleBoard[i];
-        _entityNodes[i]->setMaterialName(materialName.str());
+        _entityNodes[i].first->setMaterialName(materialName.str());
         break;
     }
   }
@@ -254,30 +260,23 @@ PlayState::mousePressed
 
   if (it != result.end()) {
     //Aqui se en la casilla que pincho, puede ejecutarla directamente
-    //std::cout << "nombre de la entidad en la que pincho " << it->movable->getParentSceneNode()->getName() << std::endl;
     std::string name = it->movable->getParentSceneNode()->getName();
+
+    // Esto es para saltar las bandera en el rayquery
+    while (name.find("Flag") == 0) {
+      it++;
+      name = it->movable->getParentSceneNode()->getName();
+    }
+
     if(name != "Ground") {
       std::string number = name.substr (4);
-      //std::cout << number << std::endl;
       int index = std::stoi(number);
-      //std::cout << index << std::endl;
-
-      //time_t  time1 = 0, time2 = 0;
 
       if (mbleft) {
         _minesweeper.execute(index/10, index % 10);
-        //std::cout << "se ha ejecutado" << std::endl;
       }
       else if (mbright) {
-        //time(&time2);
-        //std::cout << "time2 - time1: " << difftime(time1, time2) << std::endl;
-        //std::cout << "time1: " << time1 << " time2: " << time2 << std::endl;
-
-        //if (difftime(time2, time1) > 100) {
-          _minesweeper.put_flag(index/10, index % 10);
-          //time(&time1);
-          //std::cout << "se ha puesto bandera" << std::endl;
-        //}
+        _minesweeper.put_flag(index/10, index % 10);
       }
       actualizeBoard();
     }
