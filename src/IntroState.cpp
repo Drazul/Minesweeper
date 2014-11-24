@@ -42,13 +42,15 @@ void IntroState::createMenu() {
   Ogre::SceneNode* playNode = menuSceneNode->createChildSceneNode("playNode");
   Ogre::SceneNode* moreNode = menuSceneNode->createChildSceneNode("moreNode");
   Ogre::SceneNode* quitNode = menuSceneNode->createChildSceneNode("quitNode");
+  Ogre::SceneNode* background = menuSceneNode->createChildSceneNode("background");
 
 
   //Ogre::Entity* wallEnt = _sceneManager->createEntity("wall.mesh");
   Ogre::Entity* playEnt = _sceneManager->createEntity("play.mesh");
   Ogre::Entity* moreEnt = _sceneManager->createEntity("more.mesh");
   Ogre::Entity* quitEnt = _sceneManager->createEntity("quit.mesh");
-    
+  Ogre::Entity* backgroundEnt = _sceneManager->createEntity("cell.mesh");
+
   playEnt->setMaterialName("playOFF");
   moreEnt->setMaterialName("moreOFF");
   quitEnt->setMaterialName("quitOFF");
@@ -57,19 +59,25 @@ void IntroState::createMenu() {
   playNode->attachObject(playEnt);
   moreNode->attachObject(moreEnt);
   quitNode->attachObject(quitEnt);
+  background->attachObject(backgroundEnt);
 
   //wallNode->setPosition(0, 0, 0);
   playNode->setPosition(0, 7, 0);
   moreNode->setPosition(0, 4.5, 0);
   quitNode->setPosition(0, 2, 0);
+  background->setPosition(0, 0, -2);
+
+  background->setScale(20, 0, 30);
 
   playNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
   moreNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
   quitNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
+  background->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
 
   playNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
   moreNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
   quitNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
+  background->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
 
 
   _sceneManager->getRootSceneNode()->addChild(menuSceneNode);

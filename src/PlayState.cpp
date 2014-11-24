@@ -124,6 +124,13 @@ PlayState::actualizeBoard() {
 
   std::vector<char> visibleBoard = _minesweeper.get_visible_board();
   std::stringstream materialName;
+  Ogre::SceneNode* flagSceneNode = _sceneManager->createSceneNode("flagSceneNode");
+  Ogre::Entity * flagEnt = _sceneManager->createEntity("Flagpole_Flag_Flag1.mesh");
+
+  flagSceneNode->attachObject(flagEnt);
+  flagSceneNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
+  flagSceneNode->roll(Ogre::Degree(180), Ogre::Node::TS_LOCAL);
+  //flagSceneNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
 
   for(int i = size-1; i >= 0; i--) {
     _entityNodes[i]->setVisible(true);
@@ -138,7 +145,7 @@ PlayState::actualizeBoard() {
         _entityNodes[i]->setVisible(false);
         break;
       case 'F':
-        //_entityNodes[i]->getParentSceneNode()->attachObject(_sceneManager->createEntity("Flagpole_Flag_Flag1.mesh"));
+        _entityNodes[i]->getParentSceneNode()->addChild(flagSceneNode);
         _entityNodes[i]->setMaterialName("flag");
         break;
       default:
