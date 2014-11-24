@@ -12,7 +12,6 @@ Minesweeper::set_difficulty(Difficulty level) {
   _board = std::vector<Cell>(_level * _level);
   _mines = std::vector<int>(_level);
   _number_of_bombs = _level;
-  _game_state = BoardState::Continue;
 }
 
 
@@ -33,6 +32,8 @@ Minesweeper::get_number_of_bombs() {
 
 void
 Minesweeper::initialize() {
+  _game_state = BoardState::Continue;
+
   initialize_empty();
   initialize_bombs();
   initialize_near();
