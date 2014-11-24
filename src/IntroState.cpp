@@ -47,19 +47,19 @@ void IntroState::createMenu() {
 
 
   //Ogre::Entity* wallEnt = _sceneManager->createEntity("wall.mesh");
-  Ogre::Entity* playEnt = _sceneManager->createEntity("play.mesh");
-  Ogre::Entity* moreEnt = _sceneManager->createEntity("more.mesh");
-  Ogre::Entity* quitEnt = _sceneManager->createEntity("quit.mesh");
+  _playEnt = _sceneManager->createEntity("play.mesh");
+  _moreEnt = _sceneManager->createEntity("more.mesh");
+  _quitEnt = _sceneManager->createEntity("quit.mesh");
   Ogre::Entity* backgroundEnt = _sceneManager->createEntity("cell.mesh");
 
-  playEnt->setMaterialName("playOFF");
-  moreEnt->setMaterialName("moreOFF");
-  quitEnt->setMaterialName("quitOFF");
+  _playEnt->setMaterialName("playOFF");
+  _moreEnt->setMaterialName("moreOFF");
+  _quitEnt->setMaterialName("quitOFF");
 
   //wallNode->attachObject(wallEnt);
-  playNode->attachObject(playEnt);
-  moreNode->attachObject(moreEnt);
-  quitNode->attachObject(quitEnt);
+  playNode->attachObject(_playEnt);
+  moreNode->attachObject(_moreEnt);
+  quitNode->attachObject(_quitEnt);
   background->attachObject(backgroundEnt);
 
   //wallNode->setPosition(0, 0, 0);
@@ -169,6 +169,37 @@ IntroState::mouseMoved
   Ogre::OverlayElement *oe;
   oe = _overlayManager->getOverlayElement("cursor");
   oe->setLeft(posx);  oe->setTop(posy);
+
+  bool mbleft, mbright; // Botones del raton pulsados
+
+  mbleft = e.state.buttonDown(OIS::MB_Left);
+  mbright = e.state.buttonDown(OIS::MB_Right);
+
+  if(!mbleft && !mbright) {
+    setRayQuery(posx, posy);
+    Ogre::RaySceneQueryResult &result = _raySceneQuery->execute();
+    Ogre::RaySceneQueryResult::iterator it;
+    it = result.begin();
+    std::string name;
+    if (it != result.end()) {
+      name = it->movable->getParentSceneNode()->getName();
+
+      if(name.find("play") == 0)
+        _playEnt->setMaterialName("playON");
+      else
+        _playEnt->setMaterialName("playOFF");
+ 
+      if(name.find("more") == 0)
+        _moreEnt->setMaterialName("moreON");
+      else
+        _moreEnt->setMaterialName("moreOFF");
+
+      if(name.find("quit") == 0)
+        _quitEnt->setMaterialName("quitON");
+      else
+        _quitEnt->setMaterialName("quitOFF");
+    }
+  }
 }
 
 void
@@ -184,19 +215,24 @@ IntroState::mousePressed
   mbleft = e.state.buttonDown(OIS::MB_Left);
   mbright = e.state.buttonDown(OIS::MB_Right);
 
-  //Con esto le dices desde donde empezar el rayQuery. El compilador dice que nunca se utiliza
-  setRayQuery(posx, posy);
-  Ogre::RaySceneQueryResult &result = _raySceneQuery->execute();
-  Ogre::RaySceneQueryResult::iterator it;
-  it = result.begin();
+  if(mbleft || mbright) {
+    //Con esto le dices desde donde empezar el rayQuery. El compilador dice que nunca se utiliza
+    setRayQuery(posx, posy);
+    Ogre::RaySceneQueryResult &result = _raySceneQuery->execute();
+    Ogre::RaySceneQueryResult::iterator it;
+    it = result.begin();
 
-  if (it != result.end()) {
-    //Aqui se en la casilla que pincho, puede ejecutarla directamente
-    std::string name = it->movable->getParentSceneNode()->getName();
-    std::cout << name << std::endl;
-    if(name.find("play") == 0) {
-      if(mbleft) 
-        changeState(PlayState::getSingletonPtr());
+    if (it != result.end()) {
+      //Aqui se en la casilla que pincho, puede ejecutarla directamente
+      std::string name = it->movable->getParentSceneNode()->getName();
+      //std::cout << name << std::endl;
+      if (mbleft) {
+        if(name.find("play") == 0) {
+          changeState(PlayState::getSingletonPtr());
+        } else if(name.find("quit") == 0) {
+          _exitGame = true;
+        }
+      }
     }
   }
 }

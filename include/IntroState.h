@@ -45,6 +45,9 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   Ogre::RenderWindow* _win;
   Ogre::Ray setRayQuery(int posx, int posy);
   Ogre::RaySceneQuery *_raySceneQuery;
+  Ogre::Entity* _playEnt;
+  Ogre::Entity* _moreEnt;
+  Ogre::Entity* _quitEnt;
 };
 
 #endif
