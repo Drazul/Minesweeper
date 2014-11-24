@@ -89,11 +89,12 @@ void PlayState::createBoardScene() {
       entity = _sceneManager->createEntity("Cell.mesh");
       entity->setMaterialName("hierba");
       sceneNodeCells->attachObject(entity);
-      sceneNodeCells->setPosition(2.1 * i, 0, 2.1 * j);
+      sceneNodeCells->setPosition(2.3 * i, 0, 2.3 * j);
+      sceneNodeCells->setScale(1, 10, 1);
 
       flagEnt = _sceneManager->createEntity("Flagpole_Flag_Flag1.mesh");
       sceneNodeFlags->attachObject(flagEnt);
-      sceneNodeFlags->setPosition(2.1 * i, 0, 2.1 * j);
+      sceneNodeFlags->setPosition(2.3 * i, 0.5, 2.3 * j);
       sceneNodeFlags->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
       sceneNodeFlags->roll(Ogre::Degree(180), Ogre::Node::TS_LOCAL);
       flagEnt->setVisible(false);

@@ -14,6 +14,7 @@ IntroState::enter ()
 
   if(_camera == nullptr)
     _camera = _sceneManager->createCamera("MenuCamera");
+  
   _viewport->setBackgroundColour(Ogre::ColourValue(0, 1.0, 1.0));
 
   _camera->setPosition(Ogre::Vector3(0.5, 4, 12));
