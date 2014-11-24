@@ -225,13 +225,11 @@ IntroState::mousePressed
     if (it != result.end()) {
       //Aqui se en la casilla que pincho, puede ejecutarla directamente
       std::string name = it->movable->getParentSceneNode()->getName();
-      //std::cout << name << std::endl;
       if (mbleft) {
         if(name.find("play") == 0) {
           changeState(PlayState::getSingletonPtr());
         } else if(name.find("quit") == 0) {
           _exitGame = true;
-          //std::cout << _exitGame << std::endl;
         }
       }
     }

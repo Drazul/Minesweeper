@@ -220,7 +220,6 @@ PlayState::keyPressed
     _exitGame = true;
   
   if (e.key == OIS::KC_A) {
-    std::cout << "Tecla A" << std::endl;
     _minesweeper.initialize();
     actualizeBoard();
   }
@@ -279,12 +278,10 @@ PlayState::mousePressed
     }
 
     if(name.find("Cell") == 0) {
-      std::cout << name << std::endl;
       std::string number = name.substr (4);
       int index = std::stoi(number);
       int x = index / 1000;
       int y = index % 1000;
-      std::cout << "number: " << number << " index: " << index << " x: " << x << " y: " << y << std::endl;
       if (mbleft) {
         _minesweeper.execute(x, y);
       }
