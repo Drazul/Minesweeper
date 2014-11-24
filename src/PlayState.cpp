@@ -1,4 +1,4 @@
-#include "IntroState.h"
+#include "PauseState.h"
 #include "PlayState.h"
 
 template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
@@ -203,21 +203,17 @@ void
 PlayState::keyPressed
 (const OIS::KeyEvent &e)
 {
-  // Transición al siguiente estado.
-  // Espacio --> IntroState
-  //Al poner esa transicion ya no coge el escape
-  //if (e.key == OIS::KC_SPACE) {
-  //  changeState(IntroState::getSingletonPtr());
-  //}
-  if (e.key == OIS::KC_ESCAPE) {
+  if (e.key == OIS::KC_ESCAPE) 
     _exitGame = true;
-  }
+  
   if (e.key == OIS::KC_A) {
     std::cout << "Tecla A" << std::endl;
     _minesweeper.initialize();
     actualizeBoard();
   }
-   
+
+  if (e.key == OIS::KC_P)
+    pushState(PauseState::getSingletonPtr());
 }
 
 void
