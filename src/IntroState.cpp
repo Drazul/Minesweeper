@@ -15,8 +15,6 @@ IntroState::enter ()
   if(_camera == nullptr)
     _camera = _sceneManager->createCamera("MenuCamera");
   
-  _viewport->setBackgroundColour(Ogre::ColourValue(0, 1.0, 1.0));
-
   _camera->setPosition(Ogre::Vector3(0.5, 4, 12));
   _camera->setDirection(Ogre::Vector3(0, 0, -1));
 
@@ -47,9 +45,9 @@ void IntroState::createMenu() {
 
 
   //Ogre::Entity* wallEnt = _sceneManager->createEntity("wall.mesh");
-  _playEnt = _sceneManager->createEntity("play.mesh");
-  _moreEnt = _sceneManager->createEntity("more.mesh");
-  _quitEnt = _sceneManager->createEntity("quit.mesh");
+  Ogre::Entity* _playEnt = _sceneManager->createEntity("play.mesh");
+  Ogre::Entity* _moreEnt = _sceneManager->createEntity("more.mesh");
+  Ogre::Entity* _quitEnt = _sceneManager->createEntity("quit.mesh");
   Ogre::Entity* backgroundEnt = _sceneManager->createEntity("cell.mesh");
 
   _playEnt->setMaterialName("playOFF");
@@ -169,7 +167,7 @@ IntroState::mouseMoved
   Ogre::OverlayElement *oe;
   oe = _overlayManager->getOverlayElement("cursor");
   oe->setLeft(posx);  oe->setTop(posy);
-
+/*
   bool mbleft, mbright; // Botones del raton pulsados
 
   mbleft = e.state.buttonDown(OIS::MB_Left);
@@ -199,14 +197,13 @@ IntroState::mouseMoved
       else
         _quitEnt->setMaterialName("quitOFF");
     }
-  }
+  }*/
 }
 
 void
 IntroState::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
-  //MoouseButtonID MB_Left = 0, MB_Right,
   float posx = e.state.X.abs;
   float posy = e.state.Y.abs;
 
