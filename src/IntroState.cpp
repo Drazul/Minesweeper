@@ -28,7 +28,7 @@ IntroState::enter ()
   createMenu();
 
   _win = _root->getAutoCreatedWindow();
-  //_raySceneQuery = _sceneManager->createRayQuery(Ogre::Ray());
+  _raySceneQuery = _sceneManager->createRayQuery(Ogre::Ray());
 
   _root->startRendering();
 
@@ -174,6 +174,30 @@ void
 IntroState::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
+  //MoouseButtonID MB_Left = 0, MB_Right,
+  float posx = e.state.X.abs;
+  float posy = e.state.Y.abs;
+
+  bool mbleft, mbright; // Botones del raton pulsados
+
+  mbleft = e.state.buttonDown(OIS::MB_Left);
+  mbright = e.state.buttonDown(OIS::MB_Right);
+
+  //Con esto le dices desde donde empezar el rayQuery. El compilador dice que nunca se utiliza
+  setRayQuery(posx, posy);
+  Ogre::RaySceneQueryResult &result = _raySceneQuery->execute();
+  Ogre::RaySceneQueryResult::iterator it;
+  it = result.begin();
+
+  if (it != result.end()) {
+    //Aqui se en la casilla que pincho, puede ejecutarla directamente
+    std::string name = it->movable->getParentSceneNode()->getName();
+    std::cout << name << std::endl;
+    if(name.find("play") == 0) {
+      if(mbleft) 
+        changeState(PlayState::getSingletonPtr());
+    }
+  }
 }
 
 void
