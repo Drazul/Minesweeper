@@ -180,6 +180,8 @@ PlayState::pause ()
 void
 PlayState::resume ()
 {
+  _minesweeper.initialize();
+  actualizeBoard();
 }
 
 bool
