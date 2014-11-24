@@ -6,7 +6,7 @@ template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
 void
 PlayState::enter ()
 {
-  _level = Difficulty::Medium;
+  _level = Difficulty::Easy;
 
   _minesweeper.set_difficulty(_level);
   _minesweeper.initialize();  
