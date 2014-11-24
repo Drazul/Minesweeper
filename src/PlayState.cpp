@@ -6,7 +6,7 @@ template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
 void
 PlayState::enter ()
 {
-  _level = Difficulty::Easy;
+  _level = Difficulty::Medium;
 
   _minesweeper.set_difficulty(_level);
   _minesweeper.initialize();  
@@ -20,9 +20,10 @@ PlayState::enter ()
   if(_camera == nullptr)
     _camera = _sceneManager->createCamera("MainCamera");
 
-  _camera->setPosition(Ogre::Vector3(7.19941, 13.4578, -10.0267));
-  _camera->setDirection(Ogre::Vector3(-0.00103734, -0.62784, 0.778358));
-
+  //_camera->setPosition(Ogre::Vector3(7.19941, 13.4578, -10.0267));
+  //_camera->setDirection(Ogre::Vector3(-0.00103734, -0.62784, 0.778358));
+  _camera->setPosition(Ogre::Vector3(7.19941, 16.4578, -10.0267));
+  _camera->setDirection(Ogre::Vector3(-0.00103734, -0.82784, 0.778358));
   _camera->setNearClipDistance(0.1);
   _camera->setFarClipDistance(100);
 
@@ -78,11 +79,11 @@ void PlayState::createBoardScene() {
   for(int i = 0; i < _level; i++) {
     for(int j = 0; j < _level; j++) {
       sceneNodeName.str(""); sceneNodeName.str(""); // Limpiamos el stream
-      sceneNodeName << "Cell" << i << j << "";
+      sceneNodeName << "Cell" << i/100 << i/10 << i % 10 << j/100 << j/10 << j % 10 << "";
       sceneNodeCells = _sceneManager->createSceneNode(sceneNodeName.str());
 
       sceneNodeName.str(""); sceneNodeName.str(""); // Limpiamos el stream
-      sceneNodeName << "Flag" << i << j << "";
+      sceneNodeName << "Flag" << i/100 << i/10 << i % 10 << j/100 << j/10 << j % 10 << "";
       sceneNodeFlags = _sceneManager->createSceneNode(sceneNodeName.str());
 
       entity = _sceneManager->createEntity("Cell.mesh");
@@ -261,22 +262,24 @@ PlayState::mousePressed
   if (it != result.end()) {
     //Aqui se en la casilla que pincho, puede ejecutarla directamente
     std::string name = it->movable->getParentSceneNode()->getName();
-
     // Esto es para saltar las bandera en el rayquery
     while (name.find("Flag") == 0) {
       it++;
       name = it->movable->getParentSceneNode()->getName();
     }
 
-    if(name != "Ground") {
+    if(name.find("Cell") == 0) {
+      std::cout << name << std::endl;
       std::string number = name.substr (4);
       int index = std::stoi(number);
-
+      int x = index / 1000;
+      int y = index % 1000;
+      std::cout << "number: " << number << " index: " << index << " x: " << x << " y: " << y << std::endl;
       if (mbleft) {
-        _minesweeper.execute(index/10, index % 10);
+        _minesweeper.execute(x, y);
       }
       else if (mbright) {
-        _minesweeper.put_flag(index/10, index % 10);
+        _minesweeper.put_flag(x, y);
       }
       actualizeBoard();
     }
