@@ -48,7 +48,11 @@ InputManager::initialise
     windowHndStr << windowHnd;
     paramList.insert(std::make_pair(std::string( "WINDOW"),
 				    windowHndStr.str()));
-
+    paramList.insert(std::make_pair("x11_mouse_grab", "false"));
+    paramList.insert(std::make_pair("x11_mouse_hide", "false"));
+    paramList.insert(std::make_pair("x11_keyboard_grab", "false"));
+    paramList.insert(std::make_pair("XAutoRepeatOn", "false"));
+    
     // Create inputsystem
     _inputSystem = OIS::InputManager::
       createInputSystem(paramList);

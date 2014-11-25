@@ -30,8 +30,6 @@ PlayState::enter ()
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 
   createScene();
-  createOverlay();
-
 
   _win = _root->getAutoCreatedWindow();
   _raySceneQuery = _sceneManager->createRayQuery(Ogre::Ray());
@@ -49,13 +47,6 @@ Ogre::Ray PlayState::setRayQuery(int posx, int posy) {
   //_raySceneQuery->setQueryMask(mask);
   return (rayMouse);
 }
-
-void PlayState::createOverlay() {
-  _overlayManager = Ogre::OverlayManager::getSingletonPtr();
-  Ogre::Overlay *overlay = _overlayManager->getByName("Info");
-  overlay->show();
-}
-
 
 void PlayState::createScene() {
 
@@ -241,12 +232,6 @@ void
 PlayState::mouseMoved
 (const OIS::MouseEvent &e)
 {
-  float posx = e.state.X.abs;
-  float posy = e.state.Y.abs;
-
-  Ogre::OverlayElement *oe;
-  oe = _overlayManager->getOverlayElement("cursor");
-  oe->setLeft(posx);  oe->setTop(posy);
 }
 
 void

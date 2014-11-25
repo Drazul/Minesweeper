@@ -23,7 +23,6 @@ IntroState::enter ()
 
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 
-  createOverlay();
   createMenu();
 
   _win = _root->getAutoCreatedWindow();
@@ -94,12 +93,6 @@ Ogre::Ray IntroState::setRayQuery(int posx, int posy) {
   return (rayMouse);
 }
 
-void IntroState::createOverlay() {
-  _overlayManager = Ogre::OverlayManager::getSingletonPtr();
-  Ogre::Overlay *overlay = _overlayManager->getByName("Info");
-  overlay->show();
-}
-
 void
 IntroState::exit()
 {
@@ -166,10 +159,6 @@ IntroState::mouseMoved
 {
   float posx = e.state.X.abs;
   float posy = e.state.Y.abs;
-
-  Ogre::OverlayElement *oe;
-  oe = _overlayManager->getOverlayElement("cursor");
-  oe->setLeft(posx);  oe->setTop(posy);
 
   bool mbleft, mbright; // Botones del raton pulsados
 

@@ -28,7 +28,6 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   bool frameStarted (const Ogre::FrameEvent& evt);
   bool frameEnded (const Ogre::FrameEvent& evt);
 
-  void createOverlay();
   void createScene();
   void createBoardScene();
   void createGroundScene();
@@ -42,7 +41,6 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Minesweeper _minesweeper;
   Difficulty _level;
   std::vector<std::pair<Ogre::Entity*, Ogre::Entity*>> _entityNodes;
-  Ogre::OverlayManager* _overlayManager;
   Ogre::RenderWindow* _win;
 
   Ogre::Root* _root;

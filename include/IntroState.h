@@ -26,7 +26,6 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   bool frameStarted (const Ogre::FrameEvent& evt);
   bool frameEnded (const Ogre::FrameEvent& evt);
 
-  void createOverlay();
   void createMenu();
 
   // Heredados de Ogre::Singleton.
@@ -41,7 +40,6 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
 
   bool _exitGame;
 
-  Ogre::OverlayManager* _overlayManager;
   Ogre::RenderWindow* _win;
   Ogre::Ray setRayQuery(int posx, int posy);
   Ogre::RaySceneQuery *_raySceneQuery;
