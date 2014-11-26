@@ -4,7 +4,6 @@
 #include <queue>
 
 Minesweeper::Minesweeper() {}
-//Minesweeper::Minesweeper(Difficulty level): _level(level) {}; 
 
 void
 Minesweeper::set_difficulty(Difficulty level) {

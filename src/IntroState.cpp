@@ -218,7 +218,8 @@ IntroState::mousePressed
         if(name.find("play") == 0) {
           changeState(PlayState::getSingletonPtr());
         } else if(name.find("quit") == 0) {
-          _exitGame = true;
+          //_exitGame = true;
+          std::exit(0);
         }
       }
     }

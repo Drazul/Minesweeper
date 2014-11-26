@@ -156,14 +156,15 @@ PlayState::actualizeBoard() {
   }
   BoardState state = _minesweeper.get_board_state();
 
-  if(state == BoardState::GameOver){
-    std::cout << "Game Over" << std::endl;
-    pushState(PauseState::getSingletonPtr());
-  }
+  if(state != BoardState::Continue) {
+    PauseState* pause = PauseState::getSingletonPtr();
+    if(state == BoardState::GameOver)
+      pause->setMessage("GameOver");
 
-  if(state == BoardState::Winner){
-    std::cout << "YOU WON!" << std::endl;
-    pushState(PauseState::getSingletonPtr());
+    if(state == BoardState::Winner)
+      pause->setMessage("Winner");
+
+    pushState(pause);
   }
 }
 

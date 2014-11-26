@@ -1,14 +1,3 @@
-/*
-#include "MyApp.h"
-
-int main() {
-  MyApp app;
-  app.start();
-
-  return 0;
-}
-*/
-
 #define UNUSED_VARIABLE(x) (void)x
 
 #include "GameManager.h"
