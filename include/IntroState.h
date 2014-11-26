@@ -45,7 +45,7 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   Ogre::RaySceneQuery *_raySceneQuery;
   
   Ogre::Entity* _playEnt;
-  Ogre::Entity* _moreEnt;
+  Ogre::Entity* _creditsEnt;
   Ogre::Entity* _quitEnt;
 };
 

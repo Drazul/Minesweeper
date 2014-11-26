@@ -38,42 +38,42 @@ void IntroState::createMenu() {
 
   //Ogre::SceneNode* wallNode = menuSceneNode->createChildSceneNode("wallNode");
   Ogre::SceneNode* playNode = menuSceneNode->createChildSceneNode("playNode");
-  Ogre::SceneNode* moreNode = menuSceneNode->createChildSceneNode("moreNode");
+  Ogre::SceneNode* creditsNode = menuSceneNode->createChildSceneNode("creditsNode");
   Ogre::SceneNode* quitNode = menuSceneNode->createChildSceneNode("quitNode");
   Ogre::SceneNode* background = menuSceneNode->createChildSceneNode("background");
 
 
   //Ogre::Entity* wallEnt = _sceneManager->createEntity("wall.mesh");
   _playEnt = _sceneManager->createEntity("play.mesh");
-  _moreEnt = _sceneManager->createEntity("more.mesh");
+  _creditsEnt = _sceneManager->createEntity("credits.mesh");
   _quitEnt = _sceneManager->createEntity("quit.mesh");
   Ogre::Entity* backgroundEnt = _sceneManager->createEntity("cell.mesh");
 
   _playEnt->setMaterialName("playOFF");
-  _moreEnt->setMaterialName("moreOFF");
+  _creditsEnt->setMaterialName("creditsOFF");
   _quitEnt->setMaterialName("quitOFF");
 
   //wallNode->attachObject(wallEnt);
   playNode->attachObject(_playEnt);
-  moreNode->attachObject(_moreEnt);
+  creditsNode->attachObject(_creditsEnt);
   quitNode->attachObject(_quitEnt);
   background->attachObject(backgroundEnt);
 
   //wallNode->setPosition(0, 0, 0);
   playNode->setPosition(0, 7, 0);
-  moreNode->setPosition(0, 4.5, 0);
+  creditsNode->setPosition(0, 4.5, 0);
   quitNode->setPosition(0, 2, 0);
   background->setPosition(0, 0, -2);
 
   background->setScale(20, 0, 30);
 
   playNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
-  moreNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
+  creditsNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
   quitNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
   background->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
 
   playNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
-  moreNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
+  creditsNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
   quitNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
   background->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
 
@@ -179,10 +179,10 @@ IntroState::mouseMoved
       else
         _playEnt->setMaterialName("playOFF");
  
-      if(name.find("more") == 0)
-        _moreEnt->setMaterialName("moreON");
+      if(name.find("credits") == 0)
+        _creditsEnt->setMaterialName("creditsON");
       else
-        _moreEnt->setMaterialName("moreOFF");
+        _creditsEnt->setMaterialName("creditsOFF");
 
       if(name.find("quit") == 0)
         _quitEnt->setMaterialName("quitON");

@@ -287,6 +287,11 @@ InputManager::mouseReleased
   return true;
 }
 
+void
+InputManager::windowClosed(Ogre::RenderWindow* window){
+  exit(0);
+}
+
 InputManager*
 InputManager::getSingletonPtr ()
 {

@@ -52,7 +52,7 @@ class InputManager : public Ogre::Singleton<InputManager>, public OIS::KeyListen
 
   OIS::Keyboard* getKeyboard ();
   OIS::Mouse* getMouse ();
-
+  void windowClosed(Ogre::RenderWindow* window);
   // Heredados de Ogre::Singleton.
   static InputManager& getSingleton ();
   static InputManager* getSingletonPtr ();
