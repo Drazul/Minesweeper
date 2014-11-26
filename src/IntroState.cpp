@@ -36,14 +36,12 @@ IntroState::enter ()
 void IntroState::createMenu() {
   Ogre::SceneNode* menuSceneNode = _sceneManager->createSceneNode("MenuScene");
 
-  //Ogre::SceneNode* wallNode = menuSceneNode->createChildSceneNode("wallNode");
   Ogre::SceneNode* playNode = menuSceneNode->createChildSceneNode("playNode");
   Ogre::SceneNode* creditsNode = menuSceneNode->createChildSceneNode("creditsNode");
   Ogre::SceneNode* quitNode = menuSceneNode->createChildSceneNode("quitNode");
   Ogre::SceneNode* background = menuSceneNode->createChildSceneNode("background");
 
 
-  //Ogre::Entity* wallEnt = _sceneManager->createEntity("wall.mesh");
   _playEnt = _sceneManager->createEntity("play.mesh");
   _creditsEnt = _sceneManager->createEntity("credits.mesh");
   _quitEnt = _sceneManager->createEntity("quit.mesh");
@@ -53,13 +51,11 @@ void IntroState::createMenu() {
   _creditsEnt->setMaterialName("creditsOFF");
   _quitEnt->setMaterialName("quitOFF");
 
-  //wallNode->attachObject(wallEnt);
   playNode->attachObject(_playEnt);
   creditsNode->attachObject(_creditsEnt);
   quitNode->attachObject(_quitEnt);
   background->attachObject(backgroundEnt);
 
-  //wallNode->setPosition(0, 0, 0);
   playNode->setPosition(0, 7, 0);
   creditsNode->setPosition(0, 4.5, 0);
   quitNode->setPosition(0, 2, 0);
@@ -77,11 +73,7 @@ void IntroState::createMenu() {
   quitNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
   background->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
 
-
   _sceneManager->getRootSceneNode()->addChild(menuSceneNode);
-
-//camara position: Vector3(0.5, 4, 12)
-//camara direction: Vector3(0, 0, -1)
 }
 
 Ogre::Ray IntroState::setRayQuery(int posx, int posy) {
@@ -89,7 +81,6 @@ Ogre::Ray IntroState::setRayQuery(int posx, int posy) {
     (posx/float(_win->getWidth()), posy/float(_win->getHeight()));
   _raySceneQuery->setRay(rayMouse);
   _raySceneQuery->setSortByDistance(true);
-  //_raySceneQuery->setQueryMask(mask);
   return (rayMouse);
 }
 
@@ -134,8 +125,6 @@ void
 IntroState::keyPressed
 (const OIS::KeyEvent &e)
 {
-  // Transición al siguiente estado.
-  // Espacio --> PlayState
   if (e.key == OIS::KC_SPACE) {
     changeState(PlayState::getSingletonPtr());
   }
