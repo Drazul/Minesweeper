@@ -34,7 +34,7 @@ class PauseState : public Ogre::Singleton<PauseState>, public GameState
 
  protected:
   Ogre::Root* _root;
-  Ogre::SceneManager* _sceneMgr;
+  Ogre::SceneManager* _sceneManager;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
 
