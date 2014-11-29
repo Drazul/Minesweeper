@@ -6,20 +6,27 @@ template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
 void
 PlayState::enter ()
 {
-  _level = Difficulty::Easy;
-
-  _minesweeper.set_difficulty(_level);
-  _minesweeper.initialize();  
-
   _root = Ogre::Root::getSingletonPtr();
   
   _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "PlaySceneManager");
 
-  initializeCamera();
+  _camera = _sceneManager->createCamera("MainCamera");
+  _camera->setNearClipDistance(0.1);
+  _camera->setFarClipDistance(100);
+  _camera->setPosition(Ogre::Vector3(0.5, 4, 12));
+  _camera->setDirection(Ogre::Vector3(0, 0, -1));
   
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 
-  createScene();
+  _level = Difficulty::Empty;
+
+  if (_level != Difficulty::Empty) {
+    _minesweeper.set_difficulty(_level);
+    _minesweeper.initialize();  
+    initializeCamera();
+    createScene();
+  }
+  chooseLevel();
 
   _win = _root->getAutoCreatedWindow();
   _raySceneQuery = _sceneManager->createRayQuery(Ogre::Ray());
@@ -29,10 +36,53 @@ PlayState::enter ()
   _exitGame = false;
 }
 
+void 
+PlayState::chooseLevel() {
+  _sceneLevel = _sceneManager->createSceneNode("SceneLevel");
+
+  Ogre::SceneNode* veryEasyNode = _sceneLevel->createChildSceneNode("veryEasyNode");
+  Ogre::SceneNode* EasyNode = _sceneLevel->createChildSceneNode("EasyNode");
+  Ogre::SceneNode* MediumNode = _sceneLevel->createChildSceneNode("MediumNode");
+  Ogre::SceneNode* background = _sceneLevel->createChildSceneNode("background");
+
+
+  Ogre::Entity* veryEasyEnt = _sceneManager->createEntity("play.mesh");
+  Ogre::Entity* easyEnt = _sceneManager->createEntity("credits.mesh");
+  Ogre::Entity* mediumEnt = _sceneManager->createEntity("quit.mesh");
+  Ogre::Entity* backgroundEnt = _sceneManager->createEntity("cell.mesh");
+
+  veryEasyEnt->setMaterialName("veryEasy");
+  easyEnt->setMaterialName("easy");
+  mediumEnt->setMaterialName("medium");
+  backgroundEnt->setMaterialName("chooseLevel");
+
+  veryEasyNode->attachObject(veryEasyEnt);
+  EasyNode->attachObject(easyEnt);
+  MediumNode->attachObject(mediumEnt);
+  background->attachObject(backgroundEnt);
+
+  veryEasyNode->setPosition(-0.75, 5, 0);
+  EasyNode->setPosition(-0.75, 2.75, 0);
+  MediumNode->setPosition(-0.75, 0.5, 0);
+  background->setPosition(0, 2.5, -1.5);
+
+  background->setScale(8, 0, 8);
+
+  veryEasyNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
+  EasyNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
+  MediumNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
+  background->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
+
+  veryEasyNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
+  EasyNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
+  MediumNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
+  background->yaw(Ogre::Degree(180), Ogre::Node::TS_LOCAL);
+
+  _sceneManager->getRootSceneNode()->addChild(_sceneLevel);
+}
+
 void
 PlayState::initializeCamera() {
-  _camera = _sceneManager->createCamera("MainCamera");
-
   if(_level == Difficulty::Easy){
     _camera->setPosition(Ogre::Vector3(8.1985, 15.7293, -9.34037));
     _camera->setDirection(Ogre::Vector3(-0.000912916, -0.728545, 0.684998));
@@ -45,9 +95,6 @@ PlayState::initializeCamera() {
     _camera->setPosition(Ogre::Vector3(17.2131, 27.386, -20.2883));
     _camera->setDirection(Ogre::Vector3(-0.000912916, -0.728545, 0.684998));
   }
-
-  _camera->setNearClipDistance(0.1);
-  _camera->setFarClipDistance(100);
 }
 
 Ogre::Ray PlayState::setRayQuery(int posx, int posy) {
@@ -221,7 +268,7 @@ PlayState::keyPressed
 {
   if (e.key == OIS::KC_ESCAPE) 
     _exitGame = true;
-  
+
   if (e.key == OIS::KC_A) {
     _minesweeper.initialize();
     actualizeBoard();

@@ -5,7 +5,7 @@
 
 #include <vector>
 
-enum Difficulty {VeryEasy=3, Easy=8, Medium=16, Hard=32};
+enum Difficulty {Empty=0, VeryEasy=3, Easy=8, Medium=16, Hard=32};
 enum BoardState {Continue=0, GameOver=-1, Winner=1};
 
 class Minesweeper {

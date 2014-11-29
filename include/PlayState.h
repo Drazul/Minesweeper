@@ -47,11 +47,13 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Ogre::SceneManager* _sceneManager;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
+  Ogre::SceneNode* _sceneLevel;
 
   bool _exitGame;
 
   Ogre::Ray setRayQuery(int posx, int posy);
   void initializeCamera();
+  void chooseLevel();
   Ogre::RaySceneQuery *_raySceneQuery;
 };
 
