@@ -50,6 +50,7 @@ EndState::setMessage(std::string message, Difficulty level){
   _message = message;
   _level = level;
 }
+
 void
 EndState::exit ()
 {
@@ -87,9 +88,6 @@ void
 EndState::keyPressed
 (const OIS::KeyEvent &e) {
     popState();
-  
-  if (e.key == OIS::KC_ESCAPE)
-    _exitGame = true;
 }
 
 void

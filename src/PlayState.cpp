@@ -220,11 +220,6 @@ PlayState::keyPressed
   if (e.key == OIS::KC_ESCAPE) 
     _exitGame = true;
   
-  if (e.key == OIS::KC_A) {
-    _minesweeper.initialize();
-    actualizeBoard();
-  }
-
   if (e.key == OIS::KC_P)
     pushState(EndState::getSingletonPtr());
 }

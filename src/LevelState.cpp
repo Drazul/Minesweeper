@@ -17,7 +17,7 @@ LevelState::enter ()
 
     _viewport = _win->getViewport(0);
 
-    _sceneNode = _sceneManager->createSceneNode("CreditsScene");
+    _sceneNode = _sceneManager->createSceneNode("LevelScene");
 
     _sceneNode->setPosition(0, 2.5, -1.5);
     _sceneNode->setScale(8, 0, 8);
@@ -43,19 +43,19 @@ LevelState::chooseLevel() {
   Ogre::SceneNode* background = _sceneLevel->createChildSceneNode("backgroundLevel");
 
 
-  Ogre::Entity* veryEasyEnt = _sceneManager->createEntity("play.mesh");
-  Ogre::Entity* easyEnt = _sceneManager->createEntity("credits.mesh");
-  Ogre::Entity* mediumEnt = _sceneManager->createEntity("quit.mesh");
+  _veryEasyEnt = _sceneManager->createEntity("play.mesh");
+  _easyEnt = _sceneManager->createEntity("credits.mesh");
+  _mediumEnt = _sceneManager->createEntity("quit.mesh");
   Ogre::Entity* backgroundEnt = _sceneManager->createEntity("cell.mesh");
 
-  veryEasyEnt->setMaterialName("veryEasy");
-  easyEnt->setMaterialName("easy");
-  mediumEnt->setMaterialName("medium");
+  _veryEasyEnt->setMaterialName("veryEasyOFF");
+  _easyEnt->setMaterialName("easyOFF");
+  _mediumEnt->setMaterialName("mediumOFF");
   backgroundEnt->setMaterialName("chooseLevel");
 
-  veryEasyNode->attachObject(veryEasyEnt);
-  EasyNode->attachObject(easyEnt);
-  MediumNode->attachObject(mediumEnt);
+  veryEasyNode->attachObject(_veryEasyEnt);
+  EasyNode->attachObject(_easyEnt);
+  MediumNode->attachObject(_mediumEnt);
   background->attachObject(backgroundEnt);
 
   veryEasyNode->setPosition(-0.75, 5, 0);
@@ -137,41 +137,39 @@ LevelState::mouseMoved
 {
   /* Los nombres que consulta son play, credits y quit *
    * porque se reaprovechan dichos componentes         */
-  /*if(_level == Difficulty::Empty) { 
-    float posx = e.state.X.abs;
-    float posy = e.state.Y.abs;
+  float posx = e.state.X.abs;
+  float posy = e.state.Y.abs;
 
-    bool mbleft, mbright; // Botones del raton pulsados
+  bool mbleft, mbright; // Botones del raton pulsados
 
-    mbleft = e.state.buttonDown(OIS::MB_Left);
-    mbright = e.state.buttonDown(OIS::MB_Right);
+  mbleft = e.state.buttonDown(OIS::MB_Left);
+  mbright = e.state.buttonDown(OIS::MB_Right);
 
-    if(!mbleft && !mbright) {
-      setRayQuery(posx, posy);
-      Ogre::RaySceneQueryResult &result = _raySceneQuery->execute();
-      Ogre::RaySceneQueryResult::iterator it;
-      it = result.begin();
-      std::string name;
-      if (it != result.end()) {
-        name = it->movable->getParentSceneNode()->getName();
+  if(!mbleft && !mbright) {
+    setRayQuery(posx, posy);
+    Ogre::RaySceneQueryResult &result = _raySceneQuery->execute();
+    Ogre::RaySceneQueryResult::iterator it;
+    it = result.begin();
+    std::string name;
+    if (it != result.end()) {
+      name = it->movable->getParentSceneNode()->getName();
 
-        if(name.find("play") == 0)
-          _playEnt->setMaterialName("playON");
-        else
-          _playEnt->setMaterialName("veryEasy");
+      if(name.find("play") == 0)
+        _veryEasyEnt->setMaterialName("veryEasyON");
+      else
+        _veryEasyEnt->setMaterialName("veryEasyOFF");
    
-        if(name.find("credits") == 0)
-          _creditsEnt->setMaterialName("creditsON");
-        else
-          _creditsEnt->setMaterialName("easy");
+      if(name.find("credits") == 0)
+        _easyEnt->setMaterialName("easyON");
+      else
+        _easyEnt->setMaterialName("easyOFF");
 
-        if(name.find("quit") == 0)
-          _quitEnt->setMaterialName("quitON");
-        else
-          _quitEnt->setMaterialName("medium");
-      }
+      if(name.find("quit") == 0)
+        _mediumEnt->setMaterialName("mediumON");
+      else
+        _mediumEnt->setMaterialName("mediumOFF");
     }
-  }*/
+  }
 }
 
 void

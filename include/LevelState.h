@@ -38,6 +38,8 @@ class LevelState : public Ogre::Singleton<LevelState>, public GameState
   Ogre::Camera* _camera;
   Ogre::RenderWindow* _win;
 
+  Ogre::Entity *_veryEasyEnt, *_easyEnt, *_mediumEnt;
+
   void chooseLevel();
   bool _exitGame;
 
