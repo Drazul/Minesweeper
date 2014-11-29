@@ -9,7 +9,7 @@ EndState::enter ()
     _root = Ogre::Root::getSingletonPtr();
 
     std::cout << _message << std::endl;
-    // Se recupera el gestor de escena y la cámara.
+    // Se recupera el gestor de escena y la cámara para superponer las letras
     _sceneManager = _root->getSceneManager("PlaySceneManager");
 
     _camera = _sceneManager->getCamera("MainCamera");
@@ -76,10 +76,8 @@ EndState::frameEnded
 void
 EndState::keyPressed
 (const OIS::KeyEvent &e) {
-  // Tecla p --> Estado anterior.
-  if (e.key == OIS::KC_P) {
     popState();
-  }
+  
   if (e.key == OIS::KC_ESCAPE)
     _exitGame = true;
 }
@@ -100,6 +98,7 @@ void
 EndState::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
+  popState();
 }
 
 void
