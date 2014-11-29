@@ -1,5 +1,6 @@
 #include "IntroState.h"
 #include "PlayState.h"
+#include "CreditsState.h"
 
 template<> IntroState* Ogre::Singleton<IntroState>::msSingleton = 0;
 
@@ -56,11 +57,7 @@ void IntroState::createMenu() {
   creditsNode->attachObject(_creditsEnt);
   quitNode->attachObject(_quitEnt);
   background->attachObject(backgroundEnt);
-/*
-  playNode->setPosition(0, 7, 0);
-  creditsNode->setPosition(0, 4.5, 0);
-  quitNode->setPosition(0, 2, 0);
-  */
+
   playNode->setPosition(-0.75, 5, 0);
   creditsNode->setPosition(-0.75, 2.75, 0);
   quitNode->setPosition(-0.75, 0.5, 0);
@@ -77,9 +74,6 @@ void IntroState::createMenu() {
   creditsNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
   quitNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
   background->yaw(Ogre::Degree(180), Ogre::Node::TS_LOCAL);
-
-  //background->roll(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
-
 
   _sceneManager->getRootSceneNode()->addChild(menuSceneNode);
 }
@@ -212,12 +206,12 @@ IntroState::mousePressed
       //Aqui se en la casilla que pincho, puede ejecutarla directamente
       std::string name = it->movable->getParentSceneNode()->getName();
       if (mbleft) {
-        if(name.find("play") == 0) {
+        if(name.find("play") == 0) 
           changeState(PlayState::getSingletonPtr());
-        } else if(name.find("quit") == 0) {
-          //_exitGame = true;
+        else if(name.find("quit") == 0) 
           std::exit(0);
-        }
+        else if(name.find("credits") == 0)
+          pushState(CreditsState::getSingletonPtr());
       }
     }
   }

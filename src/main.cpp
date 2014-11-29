@@ -4,6 +4,7 @@
 #include "IntroState.h"
 #include "PlayState.h"
 #include "EndState.h"
+#include "CreditsState.h"
 
 #include <iostream>
 
@@ -15,11 +16,13 @@ int main () {
   IntroState* introState = new IntroState();
   PlayState* playState = new PlayState();
   EndState* endState = new EndState();
+  CreditsState* creditsState = new CreditsState();
 
   UNUSED_VARIABLE(introState);
   UNUSED_VARIABLE(playState);
   UNUSED_VARIABLE(endState);
-    
+  UNUSED_VARIABLE(creditsState);
+
   try
     {
       // Inicializa el juego y transición al primer estado.
