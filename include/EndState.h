@@ -5,6 +5,7 @@
 #include <OIS/OIS.h>
 
 #include "GameState.h"
+#include "minesweeper.h"
 
 class EndState : public Ogre::Singleton<EndState>, public GameState
 {
@@ -26,7 +27,7 @@ class EndState : public Ogre::Singleton<EndState>, public GameState
   bool frameStarted (const Ogre::FrameEvent& evt);
   bool frameEnded (const Ogre::FrameEvent& evt);
 
-  void setMessage(std::string message);
+  void setMessage(std::string message, Difficulty);
 
   // Heredados de Ogre::Singleton.
   static EndState& getSingleton ();
@@ -41,6 +42,7 @@ class EndState : public Ogre::Singleton<EndState>, public GameState
 
   bool _exitGame;
   std::string _message;
+  Difficulty _level;
 };
 
 #endif

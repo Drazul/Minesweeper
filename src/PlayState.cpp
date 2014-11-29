@@ -15,13 +15,8 @@ PlayState::enter ()
   
   _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "PlaySceneManager");
 
-  _camera = _sceneManager->createCamera("MainCamera");
-
-  _camera->setPosition(Ogre::Vector3(7.19941, 16.4578, -10.0267));
-  _camera->setDirection(Ogre::Vector3(-0.00103734, -0.82784, 0.778358));
-  _camera->setNearClipDistance(0.1);
-  _camera->setFarClipDistance(100);
-
+  initializeCamera();
+  
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 
   createScene();
@@ -32,6 +27,27 @@ PlayState::enter ()
   _root->startRendering();
 
   _exitGame = false;
+}
+
+void
+PlayState::initializeCamera() {
+  _camera = _sceneManager->createCamera("MainCamera");
+
+  if(_level == Difficulty::Easy){
+    _camera->setPosition(Ogre::Vector3(8.1985, 15.7293, -9.34037));
+    _camera->setDirection(Ogre::Vector3(-0.000912916, -0.728545, 0.684998));
+  } 
+  else if (_level == Difficulty::VeryEasy) {
+    _camera->setPosition(Ogre::Vector3(2.19394, 12.0866, -5.92338));
+    _camera->setDirection(Ogre::Vector3(-0.000912916, -0.728545, 0.684998));
+  }
+  else if (_level == Difficulty::Medium) {
+    _camera->setPosition(Ogre::Vector3(17.2131, 27.386, -20.2883));
+    _camera->setDirection(Ogre::Vector3(-0.000912916, -0.728545, 0.684998));
+  }
+
+  _camera->setNearClipDistance(0.1);
+  _camera->setFarClipDistance(100);
 }
 
 Ogre::Ray PlayState::setRayQuery(int posx, int posy) {
@@ -154,10 +170,10 @@ PlayState::actualizeBoard() {
   if(state != BoardState::Continue) {
     EndState* endState = EndState::getSingletonPtr();
     if(state == BoardState::GameOver)
-      endState->setMessage("GameOver");
+      endState->setMessage("GameOver", _level);
 
     if(state == BoardState::Winner)
-      endState->setMessage("Winner");
+      endState->setMessage("Winner", _level);
 
     pushState(endState);
   }

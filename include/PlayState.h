@@ -51,8 +51,8 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   bool _exitGame;
 
   Ogre::Ray setRayQuery(int posx, int posy);
+  void initializeCamera();
   Ogre::RaySceneQuery *_raySceneQuery;
-
 };
 
 #endif
