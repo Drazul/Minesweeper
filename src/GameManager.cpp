@@ -55,7 +55,7 @@ GameManager::changeState
 (GameState* state)
 {
   // Limpieza del estado actual.
-  if (!_states.empty()) {
+  while (!_states.empty()) {
     // exit() sobre el último estado.
     _states.top()->exit();
     // Elimina el último estado.

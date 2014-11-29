@@ -6,27 +6,20 @@ template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
 void
 PlayState::enter ()
 {
+  _level = Difficulty::Easy;
+
+  _minesweeper.set_difficulty(_level);
+  _minesweeper.initialize();  
+
   _root = Ogre::Root::getSingletonPtr();
   
   _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "PlaySceneManager");
 
-  _camera = _sceneManager->createCamera("MainCamera");
-  _camera->setNearClipDistance(0.1);
-  _camera->setFarClipDistance(100);
-  _camera->setPosition(Ogre::Vector3(0.5, 4, 12));
-  _camera->setDirection(Ogre::Vector3(0, 0, -1));
+  initializeCamera();
   
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 
-  _level = Difficulty::Empty;
-
-  if (_level != Difficulty::Empty) {
-    _minesweeper.set_difficulty(_level);
-    _minesweeper.initialize();  
-    initializeCamera();
-    createScene();
-  }
-  chooseLevel();
+  createScene();
 
   _win = _root->getAutoCreatedWindow();
   _raySceneQuery = _sceneManager->createRayQuery(Ogre::Ray());
@@ -36,53 +29,10 @@ PlayState::enter ()
   _exitGame = false;
 }
 
-void 
-PlayState::chooseLevel() {
-  _sceneLevel = _sceneManager->createSceneNode("SceneLevel");
-
-  Ogre::SceneNode* veryEasyNode = _sceneLevel->createChildSceneNode("veryEasyNode");
-  Ogre::SceneNode* EasyNode = _sceneLevel->createChildSceneNode("EasyNode");
-  Ogre::SceneNode* MediumNode = _sceneLevel->createChildSceneNode("MediumNode");
-  Ogre::SceneNode* background = _sceneLevel->createChildSceneNode("background");
-
-
-  Ogre::Entity* veryEasyEnt = _sceneManager->createEntity("play.mesh");
-  Ogre::Entity* easyEnt = _sceneManager->createEntity("credits.mesh");
-  Ogre::Entity* mediumEnt = _sceneManager->createEntity("quit.mesh");
-  Ogre::Entity* backgroundEnt = _sceneManager->createEntity("cell.mesh");
-
-  veryEasyEnt->setMaterialName("veryEasy");
-  easyEnt->setMaterialName("easy");
-  mediumEnt->setMaterialName("medium");
-  backgroundEnt->setMaterialName("chooseLevel");
-
-  veryEasyNode->attachObject(veryEasyEnt);
-  EasyNode->attachObject(easyEnt);
-  MediumNode->attachObject(mediumEnt);
-  background->attachObject(backgroundEnt);
-
-  veryEasyNode->setPosition(-0.75, 5, 0);
-  EasyNode->setPosition(-0.75, 2.75, 0);
-  MediumNode->setPosition(-0.75, 0.5, 0);
-  background->setPosition(0, 2.5, -1.5);
-
-  background->setScale(8, 0, 8);
-
-  veryEasyNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
-  EasyNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
-  MediumNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
-  background->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
-
-  veryEasyNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
-  EasyNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
-  MediumNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
-  background->yaw(Ogre::Degree(180), Ogre::Node::TS_LOCAL);
-
-  _sceneManager->getRootSceneNode()->addChild(_sceneLevel);
-}
-
 void
 PlayState::initializeCamera() {
+  _camera = _sceneManager->createCamera("MainCamera");
+
   if(_level == Difficulty::Easy){
     _camera->setPosition(Ogre::Vector3(8.1985, 15.7293, -9.34037));
     _camera->setDirection(Ogre::Vector3(-0.000912916, -0.728545, 0.684998));
@@ -95,6 +45,9 @@ PlayState::initializeCamera() {
     _camera->setPosition(Ogre::Vector3(17.2131, 27.386, -20.2883));
     _camera->setDirection(Ogre::Vector3(-0.000912916, -0.728545, 0.684998));
   }
+
+  _camera->setNearClipDistance(0.1);
+  _camera->setFarClipDistance(100);
 }
 
 Ogre::Ray PlayState::setRayQuery(int posx, int posy) {
@@ -102,7 +55,6 @@ Ogre::Ray PlayState::setRayQuery(int posx, int posy) {
     (posx/float(_win->getWidth()), posy/float(_win->getHeight()));
   _raySceneQuery->setRay(rayMouse);
   _raySceneQuery->setSortByDistance(true);
-  //_raySceneQuery->setQueryMask(mask);
   return (rayMouse);
 }
 
@@ -113,7 +65,6 @@ void PlayState::createScene() {
 }
 
 void PlayState::createBoardScene() {
-  //Se debe sustitutir esto por el nivel correspondiente
   Ogre::Entity * entity;
   Ogre::Entity * flagEnt;
 
@@ -127,11 +78,11 @@ void PlayState::createBoardScene() {
 
   for(int i = 0; i < _level; i++) {
     for(int j = 0; j < _level; j++) {
-      sceneNodeName.str(""); sceneNodeName.str(""); // Limpiamos el stream
+      sceneNodeName.str(""); sceneNodeName.str(""); 
       sceneNodeName << "Cell" << i/100 << i/10 << i % 10 << j/100 << j/10 << j % 10 << "";
       sceneNodeCells = _sceneManager->createSceneNode(sceneNodeName.str());
 
-      sceneNodeName.str(""); sceneNodeName.str(""); // Limpiamos el stream
+      sceneNodeName.str(""); sceneNodeName.str(""); 
       sceneNodeName << "Flag" << i/100 << i/10 << i % 10 << j/100 << j/10 << j % 10 << "";
       sceneNodeFlags = _sceneManager->createSceneNode(sceneNodeName.str());
 
@@ -164,20 +115,17 @@ void PlayState::createGroundScene() {
   Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, planeGround,
   200,200,1,1,true,1,20,20,Ogre::Vector3::UNIT_Z);
 
-  //Creo el nodo de escena y la entidad que van a contener al plano
   Ogre::SceneNode* GroundNode = _sceneManager->createSceneNode("Ground");
   Ogre::Entity* groundEnt = _sceneManager->createEntity("Ground", "planeGround");
   groundEnt->setMaterialName("Ground");
   GroundNode->attachObject(groundEnt);
 
-  //Añado una luz a la escena, le doy una direccion y la adjunto al nodo de escena
   _sceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE); 
   Ogre::Light* light = _sceneManager->createLight("Light");
   light->setType(Ogre::Light::LT_DIRECTIONAL);
   light->setDirection(Ogre::Vector3(1,-1,0));
   GroundNode->attachObject(light);
 
-  //Adjunto al nodo de escena principal el nodo de escena creado
   _sceneManager->getRootSceneNode()->addChild(GroundNode);
 }
 
@@ -268,7 +216,7 @@ PlayState::keyPressed
 {
   if (e.key == OIS::KC_ESCAPE) 
     _exitGame = true;
-
+  
   if (e.key == OIS::KC_A) {
     _minesweeper.initialize();
     actualizeBoard();
@@ -297,25 +245,21 @@ void
 PlayState::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
-  //MoouseButtonID MB_Left = 0, MB_Right,
   float posx = e.state.X.abs;
   float posy = e.state.Y.abs;
 
-  bool mbleft, mbright; // Botones del raton pulsados
+  bool mbleft, mbright;
 
   mbleft = e.state.buttonDown(OIS::MB_Left);
   mbright = e.state.buttonDown(OIS::MB_Right);
 
-  //Con esto le dices desde donde empezar el rayQuery. El compilador dice que nunca se utiliza
   setRayQuery(posx, posy);
   Ogre::RaySceneQueryResult &result = _raySceneQuery->execute();
   Ogre::RaySceneQueryResult::iterator it;
   it = result.begin();
 
   if (it != result.end()) {
-    //Aqui se en la casilla que pincho, puede ejecutarla directamente
     std::string name = it->movable->getParentSceneNode()->getName();
-    // Esto es para saltar las bandera en el rayquery
     while (name.find("Flag") == 0) {
       it++;
       name = it->movable->getParentSceneNode()->getName();

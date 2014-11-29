@@ -9,7 +9,6 @@ EndState::enter ()
     _root = Ogre::Root::getSingletonPtr();
 
     std::cout << _message << std::endl;
-    // Se recupera el gestor de escena y la cámara para superponer las letras
     _sceneManager = _root->getSceneManager("PlaySceneManager");
 
     _camera = _sceneManager->getCamera("MainCamera");

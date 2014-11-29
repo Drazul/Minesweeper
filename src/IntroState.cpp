@@ -1,6 +1,6 @@
 #include "IntroState.h"
-#include "PlayState.h"
 #include "CreditsState.h"
+#include "LevelState.h"
 
 template<> IntroState* Ogre::Singleton<IntroState>::msSingleton = 0;
 
@@ -126,9 +126,6 @@ void
 IntroState::keyPressed
 (const OIS::KeyEvent &e)
 {
-  if (e.key == OIS::KC_SPACE) {
-    changeState(PlayState::getSingletonPtr());
-  }
   if (e.key == OIS::KC_ESCAPE) {
     _exitGame = true;
   }
@@ -150,7 +147,7 @@ IntroState::mouseMoved
   float posx = e.state.X.abs;
   float posy = e.state.Y.abs;
 
-  bool mbleft, mbright; // Botones del raton pulsados
+  bool mbleft, mbright; 
 
   mbleft = e.state.buttonDown(OIS::MB_Left);
   mbright = e.state.buttonDown(OIS::MB_Right);
@@ -189,24 +186,22 @@ IntroState::mousePressed
   float posx = e.state.X.abs;
   float posy = e.state.Y.abs;
 
-  bool mbleft, mbright; // Botones del raton pulsados
+  bool mbleft, mbright; 
 
   mbleft = e.state.buttonDown(OIS::MB_Left);
   mbright = e.state.buttonDown(OIS::MB_Right);
 
   if(mbleft || mbright) {
-    //Con esto le dices desde donde empezar el rayQuery. El compilador dice que nunca se utiliza
     setRayQuery(posx, posy);
     Ogre::RaySceneQueryResult &result = _raySceneQuery->execute();
     Ogre::RaySceneQueryResult::iterator it;
     it = result.begin();
 
     if (it != result.end()) {
-      //Aqui se en la casilla que pincho, puede ejecutarla directamente
       std::string name = it->movable->getParentSceneNode()->getName();
       if (mbleft) {
         if(name.find("play") == 0) 
-          changeState(PlayState::getSingletonPtr());
+          pushState(LevelState::getSingletonPtr());
         else if(name.find("quit") == 0) 
           std::exit(0);
         else if(name.find("credits") == 0)
