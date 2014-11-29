@@ -7,20 +7,17 @@ template<> IntroState* Ogre::Singleton<IntroState>::msSingleton = 0;
 void
 IntroState::enter ()
 {
-  if(_root == nullptr)
+  if(_root == nullptr) {
     _root = Ogre::Root::getSingletonPtr();
-
-  if(_sceneManager == nullptr)
     _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "IntroSceneManager");
-
-  if(_camera == nullptr)
     _camera = _sceneManager->createCamera("MenuCamera");
-  
-  _camera->setPosition(Ogre::Vector3(0.5, 4, 12));
-  _camera->setDirection(Ogre::Vector3(0, 0, -1));
 
-  _camera->setNearClipDistance(0.1);
-  _camera->setFarClipDistance(100);
+    _camera->setPosition(Ogre::Vector3(0.5, 4, 12));
+    _camera->setDirection(Ogre::Vector3(0, 0, -1));
+
+    _camera->setNearClipDistance(0.1);
+    _camera->setFarClipDistance(100);
+  }
 
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 
@@ -35,12 +32,12 @@ IntroState::enter ()
 }
 
 void IntroState::createMenu() {
-  Ogre::SceneNode* menuSceneNode = _sceneManager->createSceneNode("MenuScene");
+  _menuSceneNode = _sceneManager->createSceneNode("MenuScene");
 
-  Ogre::SceneNode* playNode = menuSceneNode->createChildSceneNode("playNode");
-  Ogre::SceneNode* creditsNode = menuSceneNode->createChildSceneNode("creditsNode");
-  Ogre::SceneNode* quitNode = menuSceneNode->createChildSceneNode("quitNode");
-  Ogre::SceneNode* background = menuSceneNode->createChildSceneNode("background");
+  Ogre::SceneNode* playNode = _menuSceneNode->createChildSceneNode("playNode");
+  Ogre::SceneNode* creditsNode = _menuSceneNode->createChildSceneNode("creditsNode");
+  Ogre::SceneNode* quitNode = _menuSceneNode->createChildSceneNode("quitNode");
+  Ogre::SceneNode* background = _menuSceneNode->createChildSceneNode("background");
 
 
   _playEnt = _sceneManager->createEntity("play.mesh");
@@ -75,7 +72,7 @@ void IntroState::createMenu() {
   quitNode->yaw(Ogre::Degree(-90), Ogre::Node::TS_LOCAL);
   background->yaw(Ogre::Degree(180), Ogre::Node::TS_LOCAL);
 
-  _sceneManager->getRootSceneNode()->addChild(menuSceneNode);
+  _sceneManager->getRootSceneNode()->addChild(_menuSceneNode);
 }
 
 Ogre::Ray IntroState::setRayQuery(int posx, int posy) {
@@ -96,11 +93,13 @@ IntroState::exit()
 void
 IntroState::pause ()
 {
+  _menuSceneNode->setVisible(false);
 }
 
 void
 IntroState::resume ()
 {
+  _menuSceneNode->setVisible(true);
 }
 
 bool

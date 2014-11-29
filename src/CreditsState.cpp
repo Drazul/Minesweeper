@@ -5,13 +5,39 @@ template<> CreditsState* Ogre::Singleton<CreditsState>::msSingleton = 0;
 void
 CreditsState::enter ()
 {
+  if(_root == nullptr){
+    _root = Ogre::Root::getSingletonPtr();
 
+    std::cout << _message << std::endl;
+    // Se recupera el gestor de escena y la cámara para superponer las letras
+    _sceneManager = _root->getSceneManager("IntroSceneManager");
+
+    _camera = _sceneManager->getCamera("MenuCamera");
+    _viewport = _root->getAutoCreatedWindow()->getViewport(0);
+    _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 1.0, 0.0));
+
+    _sceneNode = _sceneManager->createSceneNode("CreditsScene");
+
+    _sceneNode->setPosition(0, 2.5, -1.5);
+    _sceneNode->setScale(8, 0, 8);
+    _sceneNode->pitch(Ogre::Degree(90), Ogre::Node::TS_LOCAL);
+    _sceneNode->yaw(Ogre::Degree(180), Ogre::Node::TS_LOCAL);
+
+    _sceneManager->getRootSceneNode()->addChild(_sceneNode);
+  }
+
+  Ogre::Entity* entity = _sceneManager->createEntity("cell.mesh");
+  entity->setMaterialName("credits");
+
+  _sceneNode->attachObject(entity);
+
+  _exitGame = false;
 }
 
 void
 CreditsState::exit ()
 {
-  //_sceneNode->detachAllObjects();
+  _sceneNode->detachAllObjects();
 }
 
 void
