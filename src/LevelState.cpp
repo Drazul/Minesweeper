@@ -178,6 +178,8 @@ void
 LevelState::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
+  /* En este método busco las cadenas play, credits, y quit *
+   * porque se reaprovechan las entidades .mesh del menú    */
   float posx = e.state.X.abs;
   float posy = e.state.Y.abs;
 
@@ -195,12 +197,15 @@ LevelState::mousePressed
     if (it != result.end()) {
       std::string name = it->movable->getParentSceneNode()->getName();
       if (mbleft) {
+        PlayState* playState = PlayState::getSingletonPtr();
         if(name.find("play") == 0) 
-          changeState(PlayState::getSingletonPtr());
-        else if(name.find("quit") == 0) 
-          changeState(PlayState::getSingletonPtr());
+          playState->setLevel(Difficulty::VeryEasy);
         else if(name.find("credits") == 0)
-          changeState(PlayState::getSingletonPtr());
+          playState->setLevel(Difficulty::Easy);
+        else if(name.find("quit") == 0) 
+          playState->setLevel(Difficulty::Medium);
+
+        changeState(playState);
       }
     }
   }

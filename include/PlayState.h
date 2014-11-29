@@ -32,6 +32,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void createBoardScene();
   void createGroundScene();
   void actualizeBoard();
+  void setLevel(Difficulty level);
 
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
