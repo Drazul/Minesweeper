@@ -1,15 +1,15 @@
-#ifndef PauseState_H
-#define PauseState_H
+#ifndef EndState_H
+#define EndState_H
 
 #include <Ogre.h>
 #include <OIS/OIS.h>
 
 #include "GameState.h"
 
-class PauseState : public Ogre::Singleton<PauseState>, public GameState
+class EndState : public Ogre::Singleton<EndState>, public GameState
 {
  public:
-  PauseState() {}
+  EndState() {}
 
   void enter ();
   void exit ();
@@ -29,12 +29,13 @@ class PauseState : public Ogre::Singleton<PauseState>, public GameState
   void setMessage(std::string message);
 
   // Heredados de Ogre::Singleton.
-  static PauseState& getSingleton ();
-  static PauseState* getSingletonPtr ();
+  static EndState& getSingleton ();
+  static EndState* getSingletonPtr ();
 
  protected:
   Ogre::Root* _root;
   Ogre::SceneManager* _sceneManager;
+  Ogre::SceneNode* _sceneNode;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
 

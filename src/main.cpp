@@ -3,7 +3,7 @@
 #include "GameManager.h"
 #include "IntroState.h"
 #include "PlayState.h"
-#include "PauseState.h"
+#include "EndState.h"
 
 #include <iostream>
 
@@ -14,16 +14,15 @@ int main () {
   GameManager* game = new GameManager();
   IntroState* introState = new IntroState();
   PlayState* playState = new PlayState();
-  PauseState* pauseState = new PauseState();
+  EndState* endState = new EndState();
 
   UNUSED_VARIABLE(introState);
   UNUSED_VARIABLE(playState);
-  UNUSED_VARIABLE(pauseState);
+  UNUSED_VARIABLE(endState);
     
   try
     {
       // Inicializa el juego y transición al primer estado.
-      //game->start(PlayState::getSingletonPtr());
       game->start(IntroState::getSingletonPtr());
     }
   catch (Ogre::Exception& e)

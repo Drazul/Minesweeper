@@ -1,4 +1,4 @@
-#include "PauseState.h"
+#include "EndState.h"
 #include "PlayState.h"
 
 template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
@@ -11,17 +11,12 @@ PlayState::enter ()
   _minesweeper.set_difficulty(_level);
   _minesweeper.initialize();  
 
-  if(_root == nullptr)
-    _root = Ogre::Root::getSingletonPtr();
+  _root = Ogre::Root::getSingletonPtr();
   
-  if(_sceneManager == nullptr)
-    _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "PlaySceneManager");
+  _sceneManager = _root->createSceneManager(Ogre::ST_GENERIC, "PlaySceneManager");
 
-  if(_camera == nullptr)
-    _camera = _sceneManager->createCamera("MainCamera");
+  _camera = _sceneManager->createCamera("MainCamera");
 
-  //_camera->setPosition(Ogre::Vector3(7.19941, 13.4578, -10.0267));
-  //_camera->setDirection(Ogre::Vector3(-0.00103734, -0.62784, 0.778358));
   _camera->setPosition(Ogre::Vector3(7.19941, 16.4578, -10.0267));
   _camera->setDirection(Ogre::Vector3(-0.00103734, -0.82784, 0.778358));
   _camera->setNearClipDistance(0.1);
@@ -157,14 +152,14 @@ PlayState::actualizeBoard() {
   BoardState state = _minesweeper.get_board_state();
 
   if(state != BoardState::Continue) {
-    PauseState* pause = PauseState::getSingletonPtr();
+    EndState* endState = EndState::getSingletonPtr();
     if(state == BoardState::GameOver)
-      pause->setMessage("GameOver");
+      endState->setMessage("GameOver");
 
     if(state == BoardState::Winner)
-      pause->setMessage("Winner");
+      endState->setMessage("Winner");
 
-    pushState(pause);
+    pushState(endState);
   }
 }
 
@@ -217,7 +212,7 @@ PlayState::keyPressed
   }
 
   if (e.key == OIS::KC_P)
-    pushState(PauseState::getSingletonPtr());
+    pushState(EndState::getSingletonPtr());
 }
 
 void
