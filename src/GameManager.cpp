@@ -125,7 +125,7 @@ GameManager::configure ()
     }
   }
   
-  _renderWindow = _root->initialise(true, "Game State Example");
+  _renderWindow = _root->initialise(true, "Minesweeper");
 
   Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
   

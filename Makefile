@@ -1,5 +1,5 @@
 
-EXEC := main
+EXEC := Minesweeper
 
 DIRSRC := src/
 DIROBJ := obj/
